@@ -1,0 +1,43 @@
+# openspec/config.yaml
+# Configuración SDD — Proyecto AgenteD
+schema: spec-driven
+
+context: |
+  Stack: FastAPI (Python 3.12+ async), React + TypeScript + Vite, PostgreSQL 16+, SQLAlchemy + Alembic + asyncpg
+  Frontend: Ant Design 5 dark (ConfigProvider), Atomic Design, Container-Presentational
+  Infra: Docker + docker-compose (dev local), Vercel (frontend), Render/Railway (backend + DB)
+  Testing: TestSprite + pytest + pytest-asyncio. Strict TDD habilitado (RED → GREEN → REFACTOR)
+  Visión: PixelRAG ingestion, n8n workflows (Fase 2+), CRM/ERP-agnóstico
+  Estilo: Python con tipado moderno (3.12+), TypeScript estricto, conventional commits
+  Estado actual: Scaffold de directorios. Sin archivos de implementación aún.
+
+rules:
+  proposal:
+    - Incluir plan de rollback para cambios riesgosos
+    - Limitar el alcance a un cambio atómico por propuesta
+  specs:
+    - Usar Given/When/Then para escenarios
+    - Usar palabras clave RFC 2119 (MUST, SHALL, SHOULD, MAY)
+    - Cada escenario debe ser independiente y repetible
+  design:
+    - Incluir diagramas de secuencia para flujos complejos
+    - Documentar decisiones de arquitectura con fundamento y alternativas
+    - Preferir patrones Repository + Service Layer
+  tasks:
+    - Agrupar por fase, usar numeración jerárquica (F1.1, F1.2, ...)
+    - Mantener tareas completables en una sesión (ideal < 30 min)
+  apply:
+    guidelines:
+      - Seguir la estructura de directorios definida en PLAN_ARQUITECTURA.md
+      - Usar Pydantic v2 para schemas de validación
+      - Usar SQLAlchemy 2.0 style queries
+      - Escribir docstrings en español para consistencia con el dominio
+    tdd: true
+    test_command: "testsprite run"  # TestSprite como test runner
+  verify:
+    test_command: "testsprite run"
+    build_command: "docker compose build"
+    coverage_threshold: 0
+  archive:
+    - Advertir antes de fusionar deltas destructivos
+    - Verificar que los cambios archivados están completos

@@ -1,0 +1,68 @@
+Conceptos
+Accesos Simultaneos (FULL, POS, VND, POP, WHW, TCP)
+Accesos Virtuales (AEC, AVF, API, AMH)
+Integración de Marketplaces + eCommerce vía Partners 
+Alta de Nueva Razón Social / CUIT en Instancia de Zeus ERP
+Cambio de Titularidad de la Cuenta en Instancia de Zeus ERP 
+Alta de Nuevo Tintométrico: Hogar y Obra, Automotor, Industria
+Actualizacion Tintometrico: Hogar y Obra, Automotor, Industria
+Copia de Datos Arquitectura BBDD: SKU-Proveedores-Clientes
+Beneficio Exclusivo para Kick Off de Nuevos Clientes Zeus ERP
+Financiamiento SIN Interés para Kick Off de Nuevos Clientes
+Financiamiento CON Indice IPC para Kick Off de Nuevos Clientes
+Acceso Virtual Multiempresa (AVM) - Exclusivo Nuevos Clientes
+Portal Clientes y Proveedores (PCP) - Extensivo Nuevos Clientes
+Acceso Contador Publico (CPN) - Extensivo Nuevos Clientes
+Beneficio Corporativo Kick Off de Nuevos Clientes Pack Plus +10#
+Pricing Garantizado Exclusivo para Kick Off de Nuevos Clientes
+Tecnologia Zeus Express ERP
+*5 Factor de Calculo Licenciamiento
+*5 Factor de Calculo Licenciamiento
+*5 Factor de Calculo Licenciamiento
+*2 Factor de Calculo Licenciamiento
+*1 Factor de Calculo Licenciamiento
+N/A
+N/A
+Consultar Cantidad Horas de DBA
+Bonificacion hasta 30% Off en Licenciamiento
+Financiamiento hasta 4 Pagos sin interés (0, 30, 60 y 90)
+25% Transferencia + 75% Financiado hasta 12 Meses (IPC)
+Beneficio Hasta 12 Meses (NO Computa Licenciamiento)
+Bonificacion 100% (NO Computa Licenciamiento)
+Bonificacion 100% (NO Computa Licenciamiento)
+N/A
+Deadline 4 Meses (Mes de Pricing Campaña + 3 Meses)
+Tecnologia Zeus Advanced ERP
+*5 Factor de Calculo Licenciamiento
+*5 Factor de Calculo Licenciamiento
+*5 Factor de Calculo Licenciamiento
+*2 Factor de Calculo Licenciamiento
+*1 Factor de Calculo Licenciamiento
+*6 Factor de Calculo Licenciamiento
+*3 Factor de Calculo Licenciamiento
+Consultar Cantidad Horas de DBA
+Bonificacion hasta 30% Off en Licenciamiento
+Financiamiento hasta 4 Pagos sin interés (0, 30, 60 y 90)
+25% Transferencia + 75% Financiado hasta 12 Meses (IPC)
+Beneficio Hasta 12Meses  (NO Computa Licenciamiento)
+Bonificacion 100% (NO Computa Licenciamiento)
+Bonificacion 100% (NO Computa Licenciamiento)
+Pack Plus +10# POS/POP a +N# (NO Computa Licenciamiento)
+Deadline 4 Meses (Mes de Pricing Campaña + 3 Meses)
+Tecnologia Zeus Premium ERP
+*5 Factor de Calculo Licenciamiento
+*5 Factor de Calculo Licenciamiento
+*5 Factor de Calculo Licenciamiento
+*2 Factor de Calculo Licenciamiento
+*1 Factor de Calculo Licenciamiento
+*6 Factor de Calculo Licenciamiento
+*3 Factor de Calculo Licenciamiento
+Consultar Cantidad Horas de DBA
+Bonificacion hasta 30% Off en Licenciamiento
+Financiamiento hasta 4 Pagos sin interés (0, 30, 60 y 90)
+25% Transferencia + 75% Financiado hasta 12 Meses (IPC)
+Beneficio Hasta 12 Meses  (NO Computa Licenciamiento)
+Bonificacion 100% (NO Computa Licenciamiento)
+Bonificacion 100% (NO Computa Licenciamiento)
+Pack Plus +10# POS/POP a +N# (NO Computa Licenciamiento)
+Deadline 4 Meses (Mes de Pricing Campaña + 3 Meses

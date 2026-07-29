@@ -1,0 +1,20 @@
+Politica de precios zeus cloud erp familia de product
+Politicas de comercio, reglas de negocio, condiciones de venta 
+Contrato de Servicio y Ordenes de Trabajo: Pago por Débito Automático Mandatorio.
+Implementación Tecnológica + Capacitación Técnica (Onboarding Formatos por Producto y Categoria de Cliente).
+Productos de Prueba, Activación Automática y Facturación a la Fecha de Vencimiento cargada en la OS. (*)
+Campañas Comprendidas en Olas Comerciales los Vencimientos son NO Prorrogables.
+Campañas Comerciales con Beneficios Sectoriales por Canales (Convenio Gremial).
+Beneficio Extraordinario por Forma de Pago Anual Anticipado - Bonificación por One Shoot Cash -10% off.
+Complementos de Integración por Vertical de Negocio: Ejemplo, Tintométricos - Cotizacion por Modulos.
+Ampliaciones de Accesos y Reglas de Negocio: Permanencia Minima / 6 Meses plenos de Facturacion y Servicio.
+Alcance de Servicios Comunes y Ventajas Diferenciales por Tipo de Producto/Servicio de Tecnologias Zeus.
+Coeficiente Escalable por Pack Plus +# de Accesos Concurrentes y Virtuales con beneficio de Accesos #Pos/#Pop.
+(#) Acceso Markethub AMH incluye plataformas de marketplaces, email marketing, sueldos y recursos humanos, 
+fidelización de clientes, entre otras soluciones certificadas en el ecosistema ZEUS cloud ERP.
+Precio Asegurado por 4 meses para Nuevos Clientes, la 5ta lista de precio desde la contratacion actualiza Pricing.
+La Familia Zeus opera con Inversion en Licenciamiento de estructura que incluye Implentacion + Capacitacion.
+La Facturacion del abono mensual corre a partir de la fecha de arranque de Implementacion (Regla 24/48hs).
+Se prorratearan los dias del mes inicial, y su pago se perfeccionará mediante el 1er debito automatico disponible.
+Los importes expresados en términos brutos no incluyen impuestos (IVA y Percepciones IIBB).
+(°) El concepto Horas de Desarrollo y Programacion NO aplica a Zeus Express, el valor es pleno de referencia
