@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Instalar dependencias Python
 WORKDIR /app
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install --user --no-cache-dir -r requirements.txt
 
 # Stage 2: Runtime (slim)
@@ -58,7 +58,7 @@ COPY --from=builder /usr/bin/chromium /usr/bin/chromium
 COPY --from=builder /usr/bin/chromedriver /usr/bin/chromedriver
 
 WORKDIR /app
-COPY app/ ./app/
+COPY backend/app/ ./app/
 
 EXPOSE 8000
 
