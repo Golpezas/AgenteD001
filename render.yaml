@@ -7,8 +7,8 @@
 services:
   - type: web
     name: agented-backend
-    runtime: image
-    repo: https://github.com/your-org/Project_AgenteD
+    runtime: docker
+    repo: https://github.com/Golpezas/AgenteD001
     branch: main
     dockerfilePath: ./backend/Dockerfile
     envVars:
@@ -21,7 +21,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
-        value: https://your-frontend.vercel.app
+        value: "http://localhost:5173,http://localhost:3000,https://agented001.vercel.app"
     healthCheckPath: /health
 
 databases:
