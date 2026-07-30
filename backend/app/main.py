@@ -8,8 +8,6 @@ e incluye todos los routers de la API.
 import asyncio
 import logging
 from contextlib import asynccontextmanager
-from alembic.config import Config
-from alembic import command
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -59,6 +57,9 @@ async def lifespan(app: FastAPI):
     """
     # Startup: ejecutar migraciones
     try:
+        from alembic.config import Config
+        from alembic import command
+
         alembic_cfg = Config("alembic.ini")
         alembic_cfg.set_main_option("script_location", "alembic")
         loop = asyncio.get_event_loop()
