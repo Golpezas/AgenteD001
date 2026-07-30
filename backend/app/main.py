@@ -60,6 +60,7 @@ def create_app() -> FastAPI:
     from app.api.pixelrag import router as pixelrag_router
     from app.api.calculation_factors import router as calculation_factors_router
     from app.api.business_policies import router as business_policies_router
+    from app.api.price_list_items import router as price_list_items_router
     from app.api.seed import router as seed_router
 
     app.include_router(health_router, prefix="/api/v1")
@@ -68,6 +69,7 @@ def create_app() -> FastAPI:
     app.include_router(pixelrag_router)
     app.include_router(calculation_factors_router)
     app.include_router(business_policies_router)
+    app.include_router(price_list_items_router)
     app.include_router(seed_router)
 
     return app
