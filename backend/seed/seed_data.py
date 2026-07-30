@@ -253,35 +253,35 @@ POLITICAS_DATA = [
 
 PRODUCTOS_DATA = [
     # ── ZEUS ───────────────────────────────────────────────────────
-    {"code": "ZEUS-EXP-ARS", "name": "ZEUS Express (ARS)", "family": "Zeus", "category": "monthly_fee"},
-    {"code": "ZEUS-EXP-USD", "name": "ZEUS Express (USD)", "family": "Zeus", "category": "monthly_fee"},
-    {"code": "ZEUS-ADV-ARS", "name": "ZEUS Advanced (ARS)", "family": "Zeus", "category": "monthly_fee"},
-    {"code": "ZEUS-ADV-USD", "name": "ZEUS Advanced (USD)", "family": "Zeus", "category": "monthly_fee"},
-    {"code": "ZEUS-PRM-ARS", "name": "ZEUS Premium (ARS)", "family": "Zeus", "category": "monthly_fee"},
-    {"code": "ZEUS-PRM-USD", "name": "ZEUS Premium (USD)", "family": "Zeus", "category": "monthly_fee"},
+    {"code": "ZEUS-EXP-ARS", "name": "ZEUS Express (ARS)", "family": "Zeus", "category": "suscripcion"},
+    {"code": "ZEUS-EXP-USD", "name": "ZEUS Express (USD)", "family": "Zeus", "category": "suscripcion"},
+    {"code": "ZEUS-ADV-ARS", "name": "ZEUS Advanced (ARS)", "family": "Zeus", "category": "suscripcion"},
+    {"code": "ZEUS-ADV-USD", "name": "ZEUS Advanced (USD)", "family": "Zeus", "category": "suscripcion"},
+    {"code": "ZEUS-PRM-ARS", "name": "ZEUS Premium (ARS)", "family": "Zeus", "category": "suscripcion"},
+    {"code": "ZEUS-PRM-USD", "name": "ZEUS Premium (USD)", "family": "Zeus", "category": "suscripcion"},
     # ── Balcony ────────────────────────────────────────────────────
-    {"code": "BAL002", "name": "Balcony — Módulo Ventas", "family": "Balcony", "category": "license"},
-    {"code": "BAL003", "name": "Balcony — Módulo Compras", "family": "Balcony", "category": "license"},
-    {"code": "BAL004", "name": "Balcony — Módulo Stock", "family": "Balcony", "category": "license"},
-    {"code": "BAL005", "name": "Balcony — Módulo Contable", "family": "Balcony", "category": "license"},
-    {"code": "BAL006", "name": "Balcony — Factura Electrónica", "family": "Balcony", "category": "license"},
-    {"code": "BAL007", "name": "Balcony — Módulo Producción", "family": "Balcony", "category": "license"},
-    {"code": "BAL008", "name": "Balcony — RRHH", "family": "Balcony", "category": "license"},
-    {"code": "BAL009", "name": "Balcony — CRM", "family": "Balcony", "category": "license"},
+    {"code": "BAL002", "name": "Balcony — Módulo Ventas", "family": "Balcony", "category": "software"},
+    {"code": "BAL003", "name": "Balcony — Módulo Compras", "family": "Balcony", "category": "software"},
+    {"code": "BAL004", "name": "Balcony — Módulo Stock", "family": "Balcony", "category": "software"},
+    {"code": "BAL005", "name": "Balcony — Módulo Contable", "family": "Balcony", "category": "software"},
+    {"code": "BAL006", "name": "Balcony — Factura Electrónica", "family": "Balcony", "category": "software"},
+    {"code": "BAL007", "name": "Balcony — Módulo Producción", "family": "Balcony", "category": "software"},
+    {"code": "BAL008", "name": "Balcony — RRHH", "family": "Balcony", "category": "software"},
+    {"code": "BAL009", "name": "Balcony — CRM", "family": "Balcony", "category": "software"},
     # ── MasPedidos ─────────────────────────────────────────────────
-    {"code": "MPE001", "name": "MasPedidos — Plan Básico", "family": "MasPedidos", "category": "monthly_fee"},
-    {"code": "MPE002", "name": "MasPedidos — Plan Profesional", "family": "MasPedidos", "category": "monthly_fee"},
-    {"code": "MPE003", "name": "MasPedidos — Plan Enterprise", "family": "MasPedidos", "category": "monthly_fee"},
-    # ── Partner ────────────────────────────────────────────────────
-    {"code": "PTN-BASIC", "name": "Partner — Plan Básico", "family": "Partner", "category": "monthly_fee"},
-    {"code": "PTN-PRO", "name": "Partner — Plan Profesional", "family": "Partner", "category": "monthly_fee"},
-    {"code": "PTN-ENT", "name": "Partner — Plan Enterprise", "family": "Partner", "category": "monthly_fee"},
+    {"code": "MPE001", "name": "MasPedidos — Plan Básico", "family": "MasPedidos", "category": "suscripcion"},
+    {"code": "MPE002", "name": "MasPedidos — Plan Profesional", "family": "MasPedidos", "category": "suscripcion"},
+    {"code": "MPE003", "name": "MasPedidos — Plan Enterprise", "family": "MasPedidos", "category": "suscripcion"},
+    # ── Prescriptor ────────────────────────────────────────────────
+    {"code": "PTN-BASIC", "name": "Partner — Plan Básico", "family": "Prescriptor", "category": "suscripcion"},
+    {"code": "PTN-PRO", "name": "Partner — Plan Profesional", "family": "Prescriptor", "category": "suscripcion"},
+    {"code": "PTN-ENT", "name": "Partner — Plan Enterprise", "family": "Prescriptor", "category": "suscripcion"},
     # ── Servicios ──────────────────────────────────────────────────
-    {"code": "SVC-IMPL", "name": "Implementación Inicial", "family": "Servicios", "category": "implementation"},
-    {"code": "SVC-CONS", "name": "Consultoría", "family": "Servicios", "category": "hours"},
-    {"code": "SVC-TRAIN", "name": "Capacitación", "family": "Servicios", "category": "hours"},
-    {"code": "SVC-MIGR", "name": "Migración de Datos", "family": "Servicios", "category": "one_time"},
-    {"code": "SVC-CUST", "name": "Customización", "family": "Servicios", "category": "hours"},
+    {"code": "SVC-IMPL", "name": "Implementación Inicial", "family": "Servicios Globales", "category": "servicio"},
+    {"code": "SVC-CONS", "name": "Consultoría", "family": "Servicios Globales", "category": "consultoria"},
+    {"code": "SVC-TRAIN", "name": "Capacitación", "family": "Servicios Globales", "category": "capacitacion"},
+    {"code": "SVC-MIGR", "name": "Migración de Datos", "family": "Servicios Globales", "category": "servicio"},
+    {"code": "SVC-CUST", "name": "Customización", "family": "Servicios Globales", "category": "consultoria"},
 ]
 
 # ---------------------------------------------------------------------------
@@ -320,9 +320,9 @@ PRICE_LIST_ITEMS_DATA = {
     "SVC-CUST": 18000.0,
 }
 
-MONTHLY_FAMILIES = {"Zeus", "MasPedidos", "Partner"}
-SERVICES_CATEGORIES = {"implementation", "hours", "one_time"}
-LICENSE_CATEGORIES = {"license"}
+MONTHLY_FAMILIES = {"Zeus", "MasPedidos", "Prescriptor"}
+SERVICES_CATEGORIES = {"servicio", "consultoria", "capacitacion"}
+LICENSE_CATEGORIES = {"software"}
 
 
 # ---------------------------------------------------------------------------

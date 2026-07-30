@@ -9,12 +9,11 @@ import type { Product, PriceListItem } from '@/types';
 const { Title } = Typography;
 
 export default function PriceListsPage() {
-  const { products, priceItems, loading, refresh } = usePriceLists();
+  const { products, items: priceItems, loading, refresh } = usePriceLists();
 
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [editItem, setEditItem] = useState<PriceListItem | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [saving, setSaving] = useState(false);
 
   /** Agrupa productos por familia */
   const families = useMemo(() => {
@@ -38,7 +37,6 @@ export default function PriceListsPage() {
     values: { price: number; currency: string; effective_from: string },
   ): Promise<boolean> => {
     if (!editProduct) return false;
-    setSaving(true);
     try {
       // Try to call price-list-items endpoint; if it fails, show a message
       if (editItem?.id) {
@@ -69,8 +67,6 @@ export default function PriceListsPage() {
           'Error al guardar precio. El endpoint de precios podría no estar disponible.',
       );
       return false;
-    } finally {
-      setSaving(false);
     }
   };
 

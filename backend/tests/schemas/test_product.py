@@ -13,13 +13,13 @@ class TestProductSchemaLiteralValidation:
 
     def test_valid_family_values(self):
         """Familia válida debe pasar la validación."""
-        for family in ["Zeus", "Balcony", "MasPedidos", "Partner", "Servicios"]:
+        for family in ["Zeus", "Balcony", "MasPedidos", "Prescriptor", "CASH", "Servicios Globales"]:
             product = ProductCreate(code="TEST", name="Test", family=family)
             assert product.family == family
 
     def test_valid_category_values(self):
         """Categoría válida debe pasar la validación."""
-        for cat in ["monthly_fee", "license", "implementation", "hours", "one_time"]:
+        for cat in ["suscripcion", "software", "servicio", "consultoria", "capacitacion", "marketplace"]:
             product = ProductCreate(code="TEST", name="Test", category=cat)
             assert product.category == cat
 
@@ -49,9 +49,9 @@ class TestProductSchemaLiteralValidation:
 
     def test_product_update_valid(self):
         """ProductUpdate debe aceptar valores Literal válidos."""
-        update = ProductUpdate(family="Zeus", category="license")
+        update = ProductUpdate(family="Zeus", category="software")
         assert update.family == "Zeus"
-        assert update.category == "license"
+        assert update.category == "software"
 
     def test_product_update_invalid_family(self):
         """ProductUpdate con familia inválida debe lanzar error."""

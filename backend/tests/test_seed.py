@@ -61,7 +61,7 @@ class TestSeedData:
             select(Product.family).distinct()
         )
         familias = [r[0] for r in result.all()]
-        for expected in ["Zeus", "Balcony", "MasPedidos", "Partner", "Servicios"]:
+        for expected in ["Zeus", "Balcony", "MasPedidos", "Prescriptor", "Servicios Globales"]:
             assert expected in familias, f"Falta familia {expected}"
 
     @pytest.mark.asyncio

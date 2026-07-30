@@ -75,7 +75,7 @@ export default function PriceEditModal({
       onCancel={onCancel}
       okText="Guardar"
       cancelText="Cancelar"
-      destroyOnClose
+      destroyOnHidden
     >
       <Form
         form={form}
