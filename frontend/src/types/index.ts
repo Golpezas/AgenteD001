@@ -92,9 +92,43 @@ export interface PriceListItem {
   id: string;
   price_list_id: string;
   product_id: string;
-  base_price: number;
-  unit: string;
+  price: number;
+  currency: string;
+  effective_from: string;
+  effective_to?: string | null;
+  extra_data?: Record<string, unknown> | null;
   is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Factor de licenciamiento */
+export interface CalculationFactor {
+  id: string;
+  concept_key: string;
+  concept_name: string;
+  technology_tier: string;
+  factor: number | null;
+  is_available: boolean;
+  extra_data?: Record<string, unknown> | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Política comercial */
+export interface BusinessPolicy {
+  id: string;
+  name: string;
+  policy_type: string;
+  description?: string | null;
+  value: number | null;
+  value_type: string | null;
+  conditions?: Record<string, unknown> | null;
+  client_type?: string | null;
+  is_active: boolean;
+  effective_from?: string | null;
+  effective_to?: string | null;
   created_at: string;
   updated_at: string;
 }
