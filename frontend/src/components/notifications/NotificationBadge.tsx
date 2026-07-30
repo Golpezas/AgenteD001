@@ -199,7 +199,7 @@ export default function NotificationBadge() {
       markAllAsRead();
     } else {
       const notif = unreadNotifications.find((n) => n.id === key);
-      if (notif) navigateToResource(notif.resource_type);
+      if (notif) navigateToResource(notif.resource_type ?? undefined);
     }
   };
 
