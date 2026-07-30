@@ -59,6 +59,8 @@ COPY --from=builder /usr/bin/chromedriver /usr/bin/chromedriver
 
 WORKDIR /app
 COPY backend/app/ ./app/
+COPY backend/alembic.ini .
+COPY backend/alembic/ ./alembic/
 
 EXPOSE 8000
 

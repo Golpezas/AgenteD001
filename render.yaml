@@ -21,7 +21,7 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
-        value: "http://localhost:5173,http://localhost:3000,https://agented001.vercel.app"
+        value: "http://localhost:5173,http://localhost:3000,https://agentebond.vercel.app"
     healthCheckPath: /health
 
 databases:
