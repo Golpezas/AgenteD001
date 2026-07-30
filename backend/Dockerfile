@@ -1,8 +1,8 @@
 # ──────────────────────────────────────────────
 # Backend Dockerfile — Multi-stage
 # ──────────────────────────────────────────────
-# Stage 1: Instalar dependencias + Chromium
-# Stage 2: Copiar solo lo necesario → imagen slim
+# Stage 1: Builder — Chromium + dependencias
+# Stage 2: Runtime — solo lo necesario
 # ──────────────────────────────────────────────
 
 # Stage 1: Builder
@@ -18,19 +18,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium-driver \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar dependencias Python
+# Instalar dependencias Python (sistema, no --user)
 WORKDIR /app
 COPY backend/requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Stage 2: Runtime (slim)
 FROM python:3.12-slim AS runtime
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    APP_DIR=/app \
-    PYTHONPATH=/root/.local/lib/python3.12/site-packages \
-    PATH="/root/.local/bin:$PATH"
+    APP_DIR=/app
 
 # Chromium runtime libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -53,10 +51,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcairo2 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar site-packages y app desde builder
-COPY --from=builder /root/.local /root/.local
+# Copiar Chromium desde builder
 COPY --from=builder /usr/bin/chromium /usr/bin/chromium
 COPY --from=builder /usr/bin/chromedriver /usr/bin/chromedriver
+
+# Copiar dependencias Python (instaladas en sistema)
+COPY --from=builder /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/site-packages/
 
 WORKDIR /app
 COPY backend/app/ ./app/
