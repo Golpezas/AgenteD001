@@ -2,14 +2,29 @@
 # Configuración SDD — Proyecto AgenteD
 schema: spec-driven
 
+strict_tdd: true
+
 context: |
   Stack: FastAPI (Python 3.12+ async), React + TypeScript + Vite, PostgreSQL 16+, SQLAlchemy + Alembic + asyncpg
   Frontend: Ant Design 5 dark (ConfigProvider), Atomic Design, Container-Presentational
-  Infra: Docker + docker-compose (dev local), Vercel (frontend), Render/Railway (backend + DB)
-  Testing: TestSprite + pytest + pytest-asyncio. Strict TDD habilitado (RED → GREEN → REFACTOR)
+  Infra: Docker + docker-compose (dev local), Vercel (frontend), Render (backend + DB managed)
+  Testing: pytest + pytest-asyncio + pytest-cov (backend), vitest + @testing-library/react (frontend)
+  Strict TDD: habilitado (RED → GREEN → REFACTOR)
   Visión: PixelRAG ingestion, n8n workflows (Fase 2+), CRM/ERP-agnóstico
   Estilo: Python con tipado moderno (3.12+), TypeScript estricto, conventional commits
-  Estado actual: Scaffold de directorios. Sin archivos de implementación aún.
+  Estado actual: Motor de precios desplegado en producción (Render + Vercel). Seed data cargada.
+
+testing:
+  backend:
+    runner: pytest
+    async: true
+    coverage: "--cov=app --cov-report=term-missing"
+    threshold: 80
+    command: "pytest --cov=app --cov-report=term-missing -x -v"
+  frontend:
+    runner: vitest
+    coverage: false
+    command: "npx vitest run"
 
 rules:
   proposal:
@@ -32,10 +47,9 @@ rules:
       - Usar Pydantic v2 para schemas de validación
       - Usar SQLAlchemy 2.0 style queries
       - Escribir docstrings en español para consistencia con el dominio
-    tdd: true
-    test_command: "testsprite run"  # TestSprite como test runner
+    test_command: "pytest --cov=app --cov-report=term-missing -x -v"
   verify:
-    test_command: "testsprite run"
+    test_command: "pytest --cov=app --cov-report=term-missing -v"
     build_command: "docker compose build"
     coverage_threshold: 0
   archive:
