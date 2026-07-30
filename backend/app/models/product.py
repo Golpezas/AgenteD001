@@ -56,6 +56,7 @@ class Product(Base, TimestampMixin, SoftDeleteMixin):
         comment="Categoría: monthly_fee, license, implementation, hours",
     )
     extra_data: Mapped[dict | None] = mapped_column(
+        "metadata",
         JSON(),
         nullable=True,
         comment="Metadatos flexibles",

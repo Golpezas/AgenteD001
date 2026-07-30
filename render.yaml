@@ -22,7 +22,7 @@ services:
         generateValue: true
       - key: CORS_ORIGINS
         value: "http://localhost:5173,http://localhost:3000,https://agentebond.vercel.app"
-    healthCheckPath: /health
+    healthCheckPath: /api/v1/health
 
 databases:
   - name: agented-db

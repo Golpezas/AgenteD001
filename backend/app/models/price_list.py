@@ -83,6 +83,7 @@ class PriceListItem(Base, TimestampMixin, SoftDeleteMixin):
         comment="Fecha hasta la que aplica (null = vigencia indefinida)",
     )
     extra_data: Mapped[dict | None] = mapped_column(
+        "metadata",
         JSON(),
         nullable=True,
     )

@@ -64,6 +64,7 @@ class Company(Base, TimestampMixin, SoftDeleteMixin):
         comment="Tier tecnológico: Express / Advanced / Premium",
     )
     extra_data: Mapped[dict | None] = mapped_column(
+        "metadata",
         JSON(),
         nullable=True,
         comment="Metadatos flexibles (campos específicos del negocio)",

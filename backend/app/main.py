@@ -7,10 +7,12 @@ e incluye todos los routers de la API.
 
 import asyncio
 import logging
+import traceback
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.core.config import settings
 
@@ -33,6 +35,23 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    # ── Global exception handler ──────────────────────────────────
+    # Atrapa ANY exception para que Starlette NO devuelva un 500
+    # plano (text/plain) que bypassea CORSMiddleware. En vez de eso,
+    # retorna JSON con el error real y logs para debugging.
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request: Request, exc: Exception):
+        logger.error(
+            "Unhandled exception on %s %s\n%s",
+            request.method,
+            request.url.path,
+            traceback.format_exc(),
+        )
+        return JSONResponse(
+            status_code=500,
+            content={"detail": f"Internal server error: {type(exc).__name__}: {exc}"},
+        )
 
     # Incluir routers
     from app.api.health import router as health_router
