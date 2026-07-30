@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.main import create_app
 from app.core.database import get_db
+from app.models.company import Company
 
 
 @pytest.fixture
@@ -157,6 +158,30 @@ class TestProductsEndpoint:
         assert data["name"] == "Producto API Test"
         assert "id" in data
         assert data["is_active"] is True
+
+    @pytest.mark.asyncio
+    async def test_create_product_with_company(self, client: AsyncClient):
+        """POST /api/v1/products con company_id debe asociar el producto."""
+        # Primero crear una empresa
+        company_resp = await client.post(
+            "/api/v1/companies",
+            json={"business_name": "Product Supplier", "cuit": "30-77777777-7"},
+        )
+        assert company_resp.status_code == 201
+        company_id = company_resp.json()["id"]
+
+        # Crear producto con company_id
+        response = await client.post(
+            "/api/v1/products",
+            json={
+                "code": "CPROD-001",
+                "name": "Producto Vinculado",
+                "company_id": company_id,
+            },
+        )
+        assert response.status_code == 201
+        data = response.json()
+        assert data["company_id"] == company_id
 
     @pytest.mark.asyncio
     async def test_list_products(self, client: AsyncClient):

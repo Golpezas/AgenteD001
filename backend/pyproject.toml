@@ -1,0 +1,13 @@
+[tool.pytest.ini_options]
+addopts = "--cov=app --cov-report=term-missing --cov-fail-under=80"
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+omit = [
+    "*/tests/*",
+    "*/migrations/*",
+    "*/__init__.py",
+    "*/core/config.py",
+    "conftest.py",
+]

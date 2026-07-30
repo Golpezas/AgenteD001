@@ -52,7 +52,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar código de la app
 COPY backend/app/ ./app/
 COPY backend/alembic.ini .
-COPY backend/alembic/ ./alembic/
+COPY backend/migrations/ ./migrations/
 
 EXPOSE 8000
 

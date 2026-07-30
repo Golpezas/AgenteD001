@@ -50,16 +50,16 @@ Estimated changed lines: ~2500 en 47+ archivos. Se recomiendan 3 PRs encadenados
 
 ## Fase 5: Frontend
 
-- [ ] F5.1 package.json, vite.config.ts (proxy /api), tsconfig.json
-- [ ] F5.2 src/main.tsx (ConfigProvider dark) + App.tsx (Router + AppLayout)
-- [ ] F5.3 src/types/index.ts + src/services/api.ts (fetch wrapper tipado)
-- [ ] F5.4 src/components/layout/ (AppLayout: Sider colapsable + Header + Outlet)
-- [ ] F5.5 hooks/ (useClients, useProducts, useDashboard) + components/ui/StatCard
-- [ ] F5.6 components/clients/ (ClientTable Ant Table + ClientForm Modal)
-- [ ] F5.7 components/products/ (ProductTable + ProductForm Modal)
-- [ ] F5.8 src/pages/ (Dashboard, Clients, Products)
+- [x] F5.1 package.json, vite.config.ts (proxy /api), tsconfig.json
+- [x] F5.2 src/main.tsx (ConfigProvider dark) + App.tsx (Router + AppLayout)
+- [x] F5.3 src/types/index.ts + src/services/api.ts (fetch wrapper tipado)
+- [x] F5.4 src/components/layout/ (AppLayout: Sider colapsable + Header + Outlet)
+- [x] F5.5 hooks/ (useClients, useProducts, useDashboard) + components/ui/StatCard
+- [x] F5.6 components/clients/ (ClientTable Ant Table + ClientForm Modal)
+- [x] F5.7 components/products/ (ProductTable + ProductForm Modal)
+- [x] F5.8 src/pages/ (Dashboard, Clients, Products)
 
 ## Fase 6: Documentación
 
-- [ ] F6.1 testsprite.config.yml
-- [ ] F6.2 docs/DEV_SETUP.md
+- [x] F6.1 testsprite.config.yml
+- [x] F6.2 docs/DEV_SETUP.md

@@ -61,7 +61,7 @@ async def lifespan(app: FastAPI):
         from alembic import command
 
         alembic_cfg = Config("alembic.ini")
-        alembic_cfg.set_main_option("script_location", "alembic")
+        alembic_cfg.set_main_option("script_location", "migrations")
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, command.upgrade, alembic_cfg, "head")
         logger.info("✅ Migraciones ejecutadas correctamente")

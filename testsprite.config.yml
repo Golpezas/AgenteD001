@@ -1,0 +1,27 @@
+# testsprite.config.yml
+# Configuración de TestSprite para AgenteD
+# Versión: 1.0
+
+version: "1.0"
+
+test_command: "testsprite run"
+
+project:
+  name: "AgenteD"
+  description: "Asistente Comercial y Operativo - GAP Analysis, gestión de precios y tareas"
+  language: "python"
+  framework: "fastapi"
+  testing_framework: "pytest"
+
+paths:
+  tests: "backend/tests/"
+  coverage: []
+  source:
+    - "backend/app/"
+    - "frontend/src/"
+
+reporting:
+  format: "markdown"
+  output: "testsprite-report.md"
+  include_coverage: false
+  include_visual: false

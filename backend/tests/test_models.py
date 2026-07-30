@@ -105,6 +105,29 @@ class TestProductModel:
             await db_session.commit()
         await db_session.rollback()
 
+    @pytest.mark.asyncio
+    async def test_create_product_with_company(self, db_session: AsyncSession):
+        """Debe crear un producto asociado a una empresa."""
+        company = Company(
+            business_name="Supplier Corp",
+            cuit="30-11111111-1",
+        )
+        db_session.add(company)
+        await db_session.flush()
+
+        product = Product(
+            code="COMP-PROD-001",
+            name="Producto con Compañía",
+            company_id=company.id,
+        )
+        db_session.add(product)
+        await db_session.commit()
+        await db_session.refresh(product)
+
+        assert product.company_id == company.id
+        assert product.company is not None
+        assert product.company.business_name == "Supplier Corp"
+
 
 class TestPriceListModel:
     """Suite de tests para modelos PriceList y PriceListItem."""

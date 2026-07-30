@@ -18,6 +18,7 @@ class ProductBase(BaseModel):
     family: Optional[str] = Field(None, max_length=100)
     category: Optional[str] = Field(None, max_length=50)
     extra_data: Optional[dict] = None
+    company_id: Optional[UUID] = None
 
 
 class ProductCreate(ProductBase):
@@ -35,6 +36,7 @@ class ProductUpdate(BaseModel):
     family: Optional[str] = Field(None, max_length=100)
     category: Optional[str] = Field(None, max_length=50)
     extra_data: Optional[dict] = None
+    company_id: Optional[UUID] = None
     is_active: Optional[bool] = None
 
 

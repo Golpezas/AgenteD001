@@ -8,8 +8,8 @@ en listas de precios y propuestas.
 import uuid
 from datetime import datetime
 
-from sqlalchemy import String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import ForeignKey, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import JSON, Uuid
 
 from app.models.base import Base, SoftDeleteMixin, TimestampMixin, gen_uuid
@@ -24,6 +24,11 @@ class Product(Base, TimestampMixin, SoftDeleteMixin):
         Uuid,
         primary_key=True,
         default=gen_uuid,
+    )
+    company_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid,
+        ForeignKey("companies.id", ondelete="SET NULL"),
+        nullable=True,
     )
     code: Mapped[str] = mapped_column(
         String(50),
@@ -55,3 +60,6 @@ class Product(Base, TimestampMixin, SoftDeleteMixin):
         nullable=True,
         comment="Metadatos flexibles",
     )
+
+    # ── Relaciones ──────────────────────────────────────────────
+    company: Mapped["Company | None"] = relationship(back_populates="products")

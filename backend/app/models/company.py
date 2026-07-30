@@ -9,7 +9,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import JSON, Uuid
 
 from app.models.base import Base, SoftDeleteMixin, TimestampMixin, gen_uuid
@@ -68,3 +68,6 @@ class Company(Base, TimestampMixin, SoftDeleteMixin):
         nullable=True,
         comment="Metadatos flexibles (campos específicos del negocio)",
     )
+
+    # ── Relaciones ──────────────────────────────────────────────
+    products: Mapped[list["Product"]] = relationship(back_populates="company")
