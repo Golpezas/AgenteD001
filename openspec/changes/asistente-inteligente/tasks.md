@@ -49,15 +49,15 @@ Chain strategy: feature-branch-chain
 
 ## Phase 3: Frontend Pages (PR 3)
 
-- [ ] 3.1 `types/index.ts` — interfaces CalculationFactor, BusinessPolicy
-- [ ] 3.2 Crear `hooks/usePriceLists.ts` — fetch price_list_items filtrable
-- [ ] 3.3 Crear `hooks/useBusinessRules.ts` — fetch policies filtrable
-- [ ] 3.4 Crear `pages/PriceLists.tsx` — productos por familia, precios, histórico, edición inline
-- [ ] 3.5 Crear `pages/BusinessRules.tsx` — políticas agrupadas por tipo, read-only
-- [ ] 3.6 Crear `components/price-lists/PriceListTable.tsx`
-- [ ] 3.7 Crear `components/price-lists/PriceHistory.tsx` — expandible
-- [ ] 3.8 Crear `components/price-lists/PriceEditModal.tsx`
-- [ ] 3.9 Crear `components/business-rules/PolicyViewer.tsx`
-- [ ] 3.10 `AppLayout.tsx` — items menú "Lista de Precios" / "Reglas de Negocio"
-- [ ] 3.11 `App.tsx` — rutas /price-lists, /business-rules
-- [ ] 3.12 Tests: componentes frontend (carga, histórico, edición)
+- [x] 3.1 `types/index.ts` — interfaces CalculationFactor, BusinessPolicy y corregir PriceListItem
+- [x] 3.2 Crear `hooks/usePriceLists.ts` — fetch price_list_items + products
+- [x] 3.3 Crear `hooks/useBusinessRules.ts` — fetch policies filtrable
+- [x] 3.4 Crear `pages/PriceLists.tsx` — productos por familia, precios, histórico, edición inline
+- [x] 3.5 Crear `pages/BusinessRules.tsx` — políticas agrupadas por tipo, read-only
+- [x] 3.6 Crear `components/price-lists/PriceListTable.tsx`
+- [x] 3.7 Crear `components/price-lists/PriceHistory.tsx` — expandible
+- [x] 3.8 Crear `components/price-lists/PriceEditModal.tsx`
+- [x] 3.9 Crear `components/business-rules/PolicyViewer.tsx`
+- [x] 3.10 `AppLayout.tsx` — items menú "Lista de Precios" / "Reglas de Negocio"
+- [x] 3.11 `App.tsx` — rutas /price-lists, /business-rules
+- [x] 3.12 Tests: componentes frontend (historial, edición, visualización)
