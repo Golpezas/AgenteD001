@@ -8,6 +8,7 @@ import {
   DollarOutlined,
   FileProtectOutlined,
 } from '@ant-design/icons';
+import NotificationBadge from '@/components/notifications/NotificationBadge';
 import styles from './AppLayout.module.css';
 
 const { Header, Sider, Content } = Layout;
@@ -69,6 +70,7 @@ export default function AppLayout() {
       <Layout>
         <Header className={styles.header}>
           <span className={styles.headerTitle}>AgenteD</span>
+          <NotificationBadge />
         </Header>
         <Content className={styles.content}>
           <Outlet />

@@ -151,3 +151,46 @@ export interface PaginatedResponse<T> {
   page: number;
   per_page: number;
 }
+
+/** Severidad de notificación */
+export type NotificationSeverity = 'info' | 'warning' | 'error' | 'success';
+
+/** Tipo de notificación */
+export type NotificationType = 'system' | 'business' | 'manual';
+
+/** Notificación del sistema */
+export interface Notification {
+  id: string;
+  type: NotificationType;
+  category: string;
+  title: string;
+  description: string | null;
+  severity: NotificationSeverity;
+  resource_type: string | null;
+  resource_id: string | null;
+  is_read: boolean;
+  is_dismissed: boolean;
+  read_at: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Payload para crear notificación */
+export interface NotificationCreate {
+  type: NotificationType;
+  category: string;
+  title: string;
+  description?: string;
+  severity?: NotificationSeverity;
+  resource_type?: string;
+  resource_id?: string;
+}
+
+/** Respuesta del endpoint unread-count */
+export interface UnreadCountResponse {
+  count: number;
+}
+
+/** Alias para lista paginada de notificaciones */
+export type NotificationList = PaginatedResponse<Notification>;

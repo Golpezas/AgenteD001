@@ -31,7 +31,7 @@ Chain strategy: feature-branch-chain
 - [x] 1.3 Crear `backend/app/schemas/notification.py` — NotificationCreate, NotificationResponse, NotificationList, paginación
 - [x] 1.4 Crear `backend/app/repositories/notification.py` — CRUD con filtros type/category/is_read, paginación, soft delete scope
 - [x] 1.5 Agregar `apscheduler>=3.10,<4.0` a `backend/requirements.txt`
-- [ ] 1.6 Agregar interfaz `Notification` + `NotificationList` a `frontend/src/types/index.ts` *(PR 2)*
+- [x] 1.6 Agregar tipos `Notification`, `NotificationCreate`, `NotificationList`, `UnreadCountResponse` a `frontend/src/types/index.ts` *(PR 2)*
 - [x] 1.7 Tests unitarios: validación type enum, soft delete, filtros combinados en repositorio
 
 ## Fase 2: Backend — Service, API, Scheduler
@@ -44,10 +44,10 @@ Chain strategy: feature-branch-chain
 
 ## Fase 3: Frontend — Hook, Badge, Página
 
-- [ ] 3.1 Crear `frontend/src/hooks/useNotifications.ts` — polling 30s, markRead, markAllRead, cleanup on unmount, manejo de error
-- [ ] 3.2 Crear `frontend/src/components/notifications/NotificationBadge.tsx` — BellOutlined + Badge unreadCount + Dropdown últimas 5 + "Ver todas"
-- [ ] 3.3 Crear `frontend/src/pages/Notifications.tsx` — tabla Ant Design paginada server-side, filtros type/category/is_read, botón "Marcar todas leídas"
-- [ ] 3.4 Tests hook, badge y página: polling inicial, error red, cleanup, contador cero, dropdown vacío, filtros, marcar leída
+- [x] 3.1 Crear `frontend/src/hooks/useNotifications.ts` — polling 30s, markRead, markAllRead, cleanup on unmount, manejo de error
+- [x] 3.2 Crear `frontend/src/components/notifications/NotificationBadge.tsx` — BellOutlined + Badge unreadCount + Dropdown últimas 5 + "Ver todas"
+- [x] 3.3 Crear `frontend/src/pages/Notifications.tsx` — tabla Ant Design paginada server-side, filtros type/category/is_read, botón "Marcar todas leídas"
+- [x] 3.4 Tests hook (10), badget (7), página (11) — 28 tests total, 44 incluyendo existentes
 
 ## Fase 4: Integración — Inyección en Servicios + Wiring
 
@@ -55,6 +55,6 @@ Chain strategy: feature-branch-chain
 - [ ] 4.2 Modificar `backend/app/services/company.py` — inyectar NotificationService en create/update/deactivate
 - [ ] 4.3 Modificar `backend/app/services/business_policy.py` — inyectar NotificationService en create/update/deactivate
 - [ ] 4.4 Modificar `backend/app/services/price_list_item.py` — inyectar NotificationService en create/update/deactivate
-- [ ] 4.5 Modificar `frontend/src/components/layout/AppLayout.tsx` — agregar NotificationBadge en Header
-- [ ] 4.6 Modificar `frontend/src/App.tsx` — agregar ruta `/notifications`
+- [x] 4.5 Modificar `frontend/src/components/layout/AppLayout.tsx` — agregar NotificationBadge en Header (lado derecho)
+- [x] 4.6 Modificar `frontend/src/App.tsx` — agregar ruta `/notifications`
 - [ ] 4.7 Tests integración: verificar que cada CRUD en servicios genera Notification tipo system, y que error en NotificationService no interrumpe CRUD
