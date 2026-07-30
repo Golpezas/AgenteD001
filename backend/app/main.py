@@ -5,12 +5,18 @@ Configura lifespan (migraciones automáticas), CORS,
 e incluye todos los routers de la API.
 """
 
+import asyncio
+import logging
 from contextlib import asynccontextmanager
+from alembic.config import Config
+from alembic import command
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
+
+logger = logging.getLogger("uvicorn")
 
 
 def create_app() -> FastAPI:
@@ -53,18 +59,15 @@ async def lifespan(app: FastAPI):
     """
     # Startup: ejecutar migraciones
     try:
-        import asyncio
-        from alembic.config import Config
-        from alembic import command
-
         alembic_cfg = Config("alembic.ini")
         alembic_cfg.set_main_option("script_location", "alembic")
-        # Ejecutar en un thread separado para no bloquear
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, command.upgrade, alembic_cfg, "head")
-    except Exception:
-        # Si falla la migración, la app igual arranca (degradada)
-        pass
+        logger.info("✅ Migraciones ejecutadas correctamente")
+    except Exception as e:
+        import traceback
+        logger.error(f"❌ Migraciones fallaron: {e}\n{traceback.format_exc()}")
+        # La app igual arranca (degradada)
 
     yield
 
