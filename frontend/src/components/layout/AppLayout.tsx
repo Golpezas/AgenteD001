@@ -5,6 +5,8 @@ import {
   DashboardOutlined,
   TeamOutlined,
   AppstoreOutlined,
+  DollarOutlined,
+  FileProtectOutlined,
 } from '@ant-design/icons';
 import styles from './AppLayout.module.css';
 
@@ -25,6 +27,16 @@ const menuItems = [
     key: '/products',
     icon: <AppstoreOutlined />,
     label: 'Productos',
+  },
+  {
+    key: '/price-lists',
+    icon: <DollarOutlined />,
+    label: 'Lista de Precios',
+  },
+  {
+    key: '/business-rules',
+    icon: <FileProtectOutlined />,
+    label: 'Reglas de Negocio',
   },
 ];
 
