@@ -29,6 +29,7 @@ FROM python:3.12-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     APP_DIR=/app \
+    PYTHONPATH=/root/.local/lib/python3.12/site-packages \
     PATH="/root/.local/bin:$PATH"
 
 # Chromium runtime libraries
