@@ -1,36 +1,25 @@
 # ──────────────────────────────────────────────
 # Backend Dockerfile — Multi-stage
 # ──────────────────────────────────────────────
-# Stage 1: Builder — Chromium + dependencias
-# Stage 2: Runtime — solo lo necesario
+# Stage 1: Builder — solo Chromium
+# Stage 2: Runtime — dependencias Python + app
 # ──────────────────────────────────────────────
 
-# Stage 1: Builder
+# Stage 1: Builder (Chromium)
 FROM python:3.12-slim AS builder
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
-
-# Instalar Chromium para pixelshot (PixelRAG)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
     chromium-driver \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar dependencias Python (sistema, no --user)
-WORKDIR /app
-COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Stage 2: Runtime (slim)
+# Stage 2: Runtime
 FROM python:3.12-slim AS runtime
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    APP_DIR=/app
+    PYTHONUNBUFFERED=1
 
-# Chromium runtime libraries
+# Chromium runtime libraries + dependencias Python
 RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
     chromium-driver \
@@ -55,10 +44,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /usr/bin/chromium /usr/bin/chromium
 COPY --from=builder /usr/bin/chromedriver /usr/bin/chromedriver
 
-# Copiar dependencias Python (instaladas en sistema)
-COPY --from=builder /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/site-packages/
-
+# Instalar dependencias Python directo en runtime
 WORKDIR /app
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar código de la app
 COPY backend/app/ ./app/
 COPY backend/alembic.ini .
 COPY backend/alembic/ ./alembic/
