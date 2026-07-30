@@ -171,16 +171,35 @@ export default function NotificationBadge() {
     }
   }
 
+  const navigateToResource = (resourceType?: string) => {
+    switch (resourceType) {
+      case 'product':
+        navigate('/products');
+        break;
+      case 'company':
+        navigate('/clients');
+        break;
+      case 'price_list':
+        navigate('/price-lists');
+        break;
+      case 'business_policy':
+        navigate('/business-rules');
+        break;
+      default:
+        navigate('/notifications');
+        break;
+    }
+  };
+
   const handleClick: MenuProps['onClick'] = ({ key }) => {
+    setOpen(false);
     if (key === 'view-all') {
-      setOpen(false);
       navigate('/notifications');
     } else if (key === 'mark-all-read') {
       markAllAsRead();
-      setOpen(false);
     } else {
-      // Click en notificación individual — navegar o cerrar
-      setOpen(false);
+      const notif = unreadNotifications.find((n) => n.id === key);
+      if (notif) navigateToResource(notif.resource_type);
     }
   };
 

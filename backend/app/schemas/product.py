@@ -16,7 +16,7 @@ class ProductBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
     family: Optional[Literal["Zeus", "Balcony", "MasPedidos", "Prescriptor", "Pidea", "CASH", "Servicios Globales", "Otros"]] = None
-    category: Optional[Literal["software", "hardware", "servicio", "suscripcion", "consultoria", "capacitacion", "marketplace"]] = None
+    category: Optional[Literal["software", "hardware", "servicio", "suscripcion", "consultoria", "capacitacion", "marketplace", "license", "monthly_fee", "implementation", "hours"]] = None
     extra_data: Optional[dict] = None
     company_id: Optional[UUID] = None
 
@@ -34,7 +34,7 @@ class ProductUpdate(BaseModel):
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     description: Optional[str] = None
     family: Optional[Literal["Zeus", "Balcony", "MasPedidos", "Prescriptor", "Pidea", "CASH", "Servicios Globales", "Otros"]] = None
-    category: Optional[Literal["software", "hardware", "servicio", "suscripcion", "consultoria", "capacitacion", "marketplace"]] = None
+    category: Optional[Literal["software", "hardware", "servicio", "suscripcion", "consultoria", "capacitacion", "marketplace", "license", "monthly_fee", "implementation", "hours"]] = None
     extra_data: Optional[dict] = None
     company_id: Optional[UUID] = None
     is_active: Optional[bool] = None

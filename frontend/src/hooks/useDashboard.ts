@@ -31,13 +31,10 @@ export default function useDashboard() {
         // Price lists endpoint may not exist yet; try gracefully
         let priceListsCount = 0;
         try {
-          // Try fetching price lists if endpoint exists
-          const url = '/api/v1/price-lists?page=1&per_page=1';
-          const plRes = await fetch(url);
-          if (plRes.ok) {
-            const plData = await plRes.json() as PaginatedResponse<unknown>;
-            priceListsCount = plData.total;
-          }
+          const plRes = await api.get<PaginatedResponse<unknown>>(
+            '/api/v1/price-list-items?page=1&per_page=1',
+          );
+          priceListsCount = plRes.total;
         } catch {
           // Endpoint not available yet — keep 0
         }
