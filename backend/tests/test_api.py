@@ -146,7 +146,7 @@ class TestProductsEndpoint:
     CREATE_PAYLOAD = {
         "code": "API-PROD-001",
         "name": "Producto API Test",
-        "family": "Testing",
+        "family": "Zeus",
     }
 
     @pytest.mark.asyncio

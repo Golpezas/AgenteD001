@@ -3,6 +3,8 @@ import AppLayout from '@/components/layout/AppLayout';
 import Dashboard from '@/pages/Dashboard';
 import Clients from '@/pages/Clients';
 import Products from '@/pages/Products';
+import PriceLists from '@/pages/PriceLists';
+import BusinessRules from '@/pages/BusinessRules';
 
 export default function App() {
   return (
@@ -12,6 +14,8 @@ export default function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/clients" element={<Clients />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/price-lists" element={<PriceLists />} />
+          <Route path="/business-rules" element={<BusinessRules />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

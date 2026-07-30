@@ -58,11 +58,15 @@ def create_app() -> FastAPI:
     from app.api.clients import router as clients_router
     from app.api.products import router as products_router
     from app.api.pixelrag import router as pixelrag_router
+    from app.api.calculation_factors import router as calculation_factors_router
+    from app.api.business_policies import router as business_policies_router
 
     app.include_router(health_router, prefix="/api/v1")
     app.include_router(clients_router)
     app.include_router(products_router)
     app.include_router(pixelrag_router)
+    app.include_router(calculation_factors_router)
+    app.include_router(business_policies_router)
 
     return app
 
