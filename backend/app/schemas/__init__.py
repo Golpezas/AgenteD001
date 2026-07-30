@@ -1,5 +1,17 @@
 """Schemas Pydantic v2 — DTOs de entrada/salida."""
 
+from app.schemas.analysis import (
+    AnalysisJobCreate,
+    AnalysisJobList,
+    AnalysisJobResponse,
+    AnalysisJobUpdate,
+    AnalysisProposal,
+    AnalysisResultCreate,
+    AnalysisResultList,
+    AnalysisResultResponse,
+    AnalysisResultUpdate,
+    ScreenshotResult,
+)
 from app.schemas.business_policy import (
     BusinessPolicyCreate,
     BusinessPolicyList,
@@ -26,6 +38,16 @@ from app.schemas.pricing_rule import PricingRuleCreate, PricingRuleResponse
 from app.schemas.product import ProductCreate, ProductList, ProductResponse, ProductUpdate
 
 __all__ = [
+    "AnalysisJobCreate",
+    "AnalysisJobList",
+    "AnalysisJobResponse",
+    "AnalysisJobUpdate",
+    "AnalysisProposal",
+    "AnalysisResultCreate",
+    "AnalysisResultList",
+    "AnalysisResultResponse",
+    "AnalysisResultUpdate",
+    "ScreenshotResult",
     "BusinessPolicyCreate",
     "BusinessPolicyList",
     "BusinessPolicyResponse",
