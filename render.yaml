@@ -24,6 +24,19 @@ services:
         value: "http://localhost:5173,http://localhost:3000,https://agentebond.vercel.app"
     healthCheckPath: /api/v1/health
 
+jobs:
+  - name: agented-seed
+    runtime: docker
+    repo: https://github.com/Golpezas/AgenteD001
+    branch: main
+    dockerfilePath: ./backend/Dockerfile
+    command: python -m backend.seed.seed_data
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: agented-db
+          property: connectionString
+
 databases:
   - name: agented-db
     plan: starter
