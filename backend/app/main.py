@@ -89,9 +89,25 @@ async def lifespan(app: FastAPI):
         await loop.run_in_executor(None, command.upgrade, alembic_cfg, "head")
         logger.info("✅ Migraciones ejecutadas correctamente")
     except Exception as e:
-        import traceback
         logger.error(f"❌ Migraciones fallaron: {e}\n{traceback.format_exc()}")
-        # La app igual arranca (degradada)
+
+    # Seed data (idempotente — no duplica si ya existe)
+    try:
+        from sqlalchemy.ext.asyncio import async_sessionmaker
+        from app.core.database import engine
+        from seed.seed_data import seed_todo
+
+        async_session_factory = async_sessionmaker(engine, expire_on_commit=False)
+        async with async_session_factory() as session:
+            counts = await seed_todo(session)
+        logger.info("✅ Seed completado:")
+        logger.info(f"   Factores: {counts['factores']} creados")
+        logger.info(f"   Políticas: {counts['politicas']} creadas")
+        logger.info(f"   Productos: {counts['productos']} creados")
+        pl = counts["price_list"]
+        logger.info(f"   Lista: {pl['price_list']} — {pl['items']} ítems")
+    except Exception as e:
+        logger.error(f"❌ Seed falló (puede ejecutarse después): {e}\n{traceback.format_exc()}")
 
     yield
 
