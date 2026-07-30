@@ -1,0 +1,5 @@
+/* Global reset — Ant Design maneja la mayoría de estilos */
+body {
+  margin: 0;
+  padding: 0;
+}
