@@ -19,6 +19,7 @@ from app.models.base import Base
 from app.models.business_policy import BusinessPolicy  # noqa: F401
 from app.models.calculation_factor import CalculationFactor  # noqa: F401
 from app.models.company import Company  # noqa: F401
+from app.models.notification import Notification  # noqa: F401
 from app.models.product import Product  # noqa: F401
 from app.models.price_list import PriceList, PriceListItem  # noqa: F401
 from app.models.pricing_rule import PricingRule  # noqa: F401

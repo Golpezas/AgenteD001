@@ -4,6 +4,7 @@ from app.repositories.base import BaseRepository
 from app.repositories.business_policy import BusinessPolicyRepository
 from app.repositories.calculation_factor import CalculationFactorRepository
 from app.repositories.company import CompanyRepository
+from app.repositories.notification import NotificationRepository
 from app.repositories.product import ProductRepository
 
 __all__ = [
@@ -11,5 +12,6 @@ __all__ = [
     "BusinessPolicyRepository",
     "CalculationFactorRepository",
     "CompanyRepository",
+    "NotificationRepository",
     "ProductRepository",
 ]

@@ -62,6 +62,7 @@ def create_app() -> FastAPI:
     from app.api.business_policies import router as business_policies_router
     from app.api.price_list_items import router as price_list_items_router
     from app.api.seed import router as seed_router
+    from app.api.notifications import router as notifications_router
 
     app.include_router(health_router, prefix="/api/v1")
     app.include_router(clients_router)
@@ -71,6 +72,7 @@ def create_app() -> FastAPI:
     app.include_router(business_policies_router)
     app.include_router(price_list_items_router)
     app.include_router(seed_router)
+    app.include_router(notifications_router)
 
     return app
 
@@ -113,10 +115,28 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"❌ Seed falló (puede ejecutarse después): {e}\n{traceback.format_exc()}")
 
+    # Iniciar APScheduler para barrido comercial
+    try:
+        from sqlalchemy.ext.asyncio import async_sessionmaker
+        from app.core.database import engine
+        from app.scheduler import start_scheduler
+
+        session_factory = async_sessionmaker(engine, expire_on_commit=False)
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, start_scheduler, session_factory)
+    except Exception as e:
+        logger.error(f"❌ APScheduler no inició (no crítico): {e}\n{traceback.format_exc()}")
+
     yield
 
-    # Shutdown: limpieza si es necesaria
-    pass
+    # Shutdown: detener scheduler
+    try:
+        from app.scheduler import stop_scheduler
+
+        stop_scheduler()
+        logger.info("APScheduler detenido correctamente")
+    except Exception as e:
+        logger.error(f"Error deteniendo APScheduler: {e}")
 
 
 app = create_app()
