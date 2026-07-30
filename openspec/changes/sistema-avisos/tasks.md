@@ -51,10 +51,10 @@ Chain strategy: feature-branch-chain
 
 ## Fase 4: Integración — Inyección en Servicios + Wiring
 
-- [ ] 4.1 Modificar `backend/app/services/product.py` — inyectar NotificationService, crear notificación en create/update/deactivate
-- [ ] 4.2 Modificar `backend/app/services/company.py` — inyectar NotificationService en create/update/deactivate
-- [ ] 4.3 Modificar `backend/app/services/business_policy.py` — inyectar NotificationService en create/update/deactivate
-- [ ] 4.4 Modificar `backend/app/services/price_list_item.py` — inyectar NotificationService en create/update/deactivate
+- [x] 4.1 Modificar `backend/app/services/product.py` — inyectar NotificationService, crear notificación en create/update/deactivate
+- [x] 4.2 Modificar `backend/app/services/company.py` — inyectar NotificationService en create/update/deactivate
+- [x] 4.3 Modificar `backend/app/services/business_policy.py` — inyectar NotificationService en create/update/deactivate
+- [x] 4.4 Modificar `backend/app/services/price_list_item.py` — inyectar NotificationService en create/update/deactivate
 - [x] 4.5 Modificar `frontend/src/components/layout/AppLayout.tsx` — agregar NotificationBadge en Header (lado derecho)
 - [x] 4.6 Modificar `frontend/src/App.tsx` — agregar ruta `/notifications`
-- [ ] 4.7 Tests integración: verificar que cada CRUD en servicios genera Notification tipo system, y que error en NotificationService no interrumpe CRUD
+- [x] 4.7 Tests integración: verificar que cada CRUD en servicios genera Notification tipo system, y que error en NotificationService no interrumpe CRUD
