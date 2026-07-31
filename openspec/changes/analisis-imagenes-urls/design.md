@@ -133,7 +133,7 @@ Tabla nueva (`analysis_jobs`, `analysis_results`, `scraped_sources`) mediante Al
 | base64-JSON | +33% tamaño; `input_data` JSON ya soporta base64 str (`_process_image` lo decodifica); `api.ts` frontend es solo JSON (no hay FormData); tests httpx/ASGITransport más simples; sin dep `python-multipart` | ✅ |
 | multipart | streaming eficiente, pero exige reescribir `request<T>` de `api.ts` (content-type condicional + FormData), dep nueva en backend, manejo `UploadFile` y más casos de test; sin beneficio real porque Pillow ya optimiza en servidor (≤1024px, JPEG q85 → típico < 300KB) | ❌ |
 
-Contrato: `POST /api/v1/analysis/jobs` con `{"job_type": "image", "input_data": {"image_bytes": "<base64>"}}`. El frontend lee el archivo con `FileReader.readAsDataURL` y envía solo el payload base64 (sin prefijo `data:...;base64,`).
+Contrato: `POST /api/v1/analysis/jobs` con `{"job_type": "image", "input_data": {"image_bytes": "<base64>"}}`. El frontend lee el archivo con `FileReader.readAsDataURL` y envía solo el payload base64 (sin prefijo `data:...;base64,`). **Límite**: `image_bytes` ≤ 8 MB (base64, ~6 MB decodificado) → 413 si excede (alineado con el cap de 10M de nginx); `input_data.url` ≤ 2048 chars y validado por el SSRF guard (D7).
 
 ## D5. Deferidos explícitos (NON-goals de PR3)
 
@@ -170,9 +170,19 @@ Backend+frontend ≈ 900+ líneas → excede el budget de review. **PR3a backend
 
 **Nota**: `frontend/src/store/` está vacío; la convención de estado es hooks (no zustand/redux) — se mantiene.
 
+## D7. Seguridad del slice — SSRF guard y posture de auth (R1-001)
+
+**Decisión**: los endpoints `/api/v1/analysis/*` aceptan URLs y el servidor las fetchea (PixelRAG/scraper) → sin controles esto es SSRF. La app NO tiene auth en ningún router (decisión existente); este slice NO introduce auth, pero SÍ exige validación estricta de entrada en todo punto que acepte URLs:
+
+- **SSRF guard** (nuevo helper `backend/app/services/analysis/url_guard.py`): `validate_external_url(url: str) -> str` — (1) esquema http/https únicamente; (2) resolución DNS y rechazo de rangos IP privados/loopback/link-local/metadata (169.254.169.254, ::1, 127.0.0.0/8, 10/8, 172.16/12, 192.168/16, 100.64/10); (3) nota explícita: resolver y re-chequear en la conexión para mitigar DNS rebinding. Falla → `HTTPException(400)` en API; en el scheduler → job `failed` con `error_message`.
+- **Puntos de aplicación**: `POST /analysis/jobs` (job_type=url) y `POST /analysis/sources` (antes de `get_by_url`/create); el scheduler valida la URL de cada fuente activa antes de crear el job.
+- **Límites**: `image_bytes` ≤ 8 MB (413); `url` ≤ 2048 chars; `job_type` enum cerrado; `reason` de reject ≤ 500 chars.
+- **RED tests**: `tests/test_api_analysis.py` — URL privada/loopback → 400; esquema no-http (ftp, file) → 400; image_bytes >8MB → 413; `tests/test_scheduler.py` — fuente con URL privada → job failed sin fetch.
+- **Auth**: se mantiene `none` por consistencia con la app (sin dependencias de auth existentes); el SSRF guard + límites son la mitigación de este slice. Introducir auth real queda como follow-up explícito (fuera de PR3).
+
 ## Contratos de API (PR3)
 
-Prefijo `/api/v1/analysis`. **Auth: ninguna** — consistente con todos los routers existentes (sin dependencias de auth en la app).
+Prefijo `/api/v1/analysis`. **Auth: ninguna** — consistente con todos los routers existentes (sin dependencias de auth en la app); mitigado por el SSRF guard y límites de D7.
 
 | Método | Path | Request | Response | Auth |
 |---|---|---|---|---|
@@ -218,6 +228,7 @@ GET /api/v1/pixelrag/test (R-X03) → pipeline_state.snapshot() + count_by_statu
 | `backend/migrations/versions/005_add_analysis_tables.py` | Create | Tablas `analysis_jobs`/`analysis_results`/`scraped_sources` + índices |
 | `backend/migrations/env.py` | Modify | Import `app.models.analysis` |
 | `backend/app/services/analysis/pipeline_state.py` | Create | Singleton `AnalysisPipelineState` (R-X03) |
+| `backend/app/services/analysis/url_guard.py` | Create | SSRF guard `validate_external_url` (D7) — aplicado en jobs url, sources y scheduler |
 | `backend/app/repositories/analysis.py` | Modify | `count_by_status` en `AnalysisJobRepository` |
 | `backend/app/api/pixelrag.py` | Modify | Gating 404 producción + bloque `analysis_pipeline` |
 | `backend/app/schemas/analysis.py` | Modify | `ScrapedSourceCreate/Response/List` |
