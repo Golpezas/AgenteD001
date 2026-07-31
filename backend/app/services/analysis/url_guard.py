@@ -16,15 +16,22 @@ the address (see ``_is_private_address``) right before connecting; otherwise
 a hostname that resolves publicly at validation time could be rebound to an
 internal address by the time the connection opens.
 
-Resolution failures (NXDOMAIN, transient DNS errors) are accepted: a
-hostname that cannot be resolved cannot be fetched, so it poses no SSRF
-risk, and rejecting it here would make the endpoint flaky.
+Resolution failures (OSError) and timeouts fail closed with ValueError: a
+hostname that cannot be resolved within the timeout is not a usable public
+target, and failing the guard keeps the API responsive when the resolver is
+slow or black-holed. Resolution itself runs off the event loop (worker
+thread) under a timeout, so a stalled resolver can never block the loop.
 """
 
+import asyncio
 import ipaddress
 import socket
 from typing import List
 from urllib.parse import urlparse
+
+# How long a single hostname resolution may take before the guard fails
+# closed. Keeps a stalled/black-holed resolver from blocking the API.
+RESOLVE_TIMEOUT_SECONDS = 5.0
 
 # Blocked ranges per design D7, plus IPv6 ULA/link-local for parity.
 _PRIVATE_NETWORKS: List[ipaddress._BaseNetwork] = [
@@ -53,20 +60,46 @@ def _is_private_address(address: str) -> bool:
 
 
 def _resolve_host(host: str) -> List[str]:
-    """Resolve a hostname to its A/AAAA records (empty list on failure)."""
-    try:
-        infos = socket.getaddrinfo(host, None)
-    except OSError:
-        return []
+    """Resolve a hostname to its A/AAAA records.
+
+    Raises OSError when the name cannot be resolved (NXDOMAIN, resolver
+    failure). Runs in a worker thread via ``asyncio.to_thread`` — never on
+    the event loop.
+    """
+    infos = socket.getaddrinfo(host, None)
     return list({info[4][0] for info in infos})
 
 
-def validate_external_url(url: str) -> str:
+async def _resolve_host_with_timeout(host: str) -> List[str]:
+    """Resolve ``host`` off the event loop, bounded by the resolve timeout.
+
+    Raises ValueError when resolution fails (OSError) or exceeds
+    ``RESOLVE_TIMEOUT_SECONDS``, so a stalled resolver fails the guard
+    instead of blocking the event loop.
+    """
+    try:
+        return await asyncio.wait_for(
+            asyncio.to_thread(_resolve_host, host),
+            timeout=RESOLVE_TIMEOUT_SECONDS,
+        )
+    except asyncio.TimeoutError as exc:
+        raise ValueError(
+            f"Timed out resolving host '{host}' after {RESOLVE_TIMEOUT_SECONDS}s"
+        ) from exc
+    except OSError as exc:
+        raise ValueError(f"Could not resolve host '{host}': {exc}") from exc
+
+
+async def validate_external_url(url: str) -> str:
     """Validate that ``url`` is a public http/https URL.
+
+    Coroutine: the DNS resolution step runs in a worker thread with a
+    timeout, so a slow or hung resolver cannot block the event loop.
 
     Raises ValueError with a human-readable reason when the URL targets a
     blocked scheme, a blocked literal IP range, or a hostname that resolves
-    to a blocked range. The API layer maps ValueError to HTTP 400.
+    to a blocked range (or cannot be resolved within the timeout). The API
+    layer maps ValueError to HTTP 400.
 
     Returns the URL unchanged when valid.
     """
@@ -90,7 +123,7 @@ def validate_external_url(url: str) -> str:
         return url
 
     # DNS hostname: reject when ANY resolved address is blocked.
-    for address in _resolve_host(host):
+    for address in await _resolve_host_with_timeout(host):
         if _is_private_address(address):
             raise ValueError(
                 f"URL host '{host}' resolves to a blocked private/loopback address"

@@ -37,7 +37,7 @@ async def create_source(
     private/loopback/link-local/metadata targets and non-http schemes get 400.
     """
     try:
-        validate_external_url(payload.url)
+        await validate_external_url(payload.url)
     except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
