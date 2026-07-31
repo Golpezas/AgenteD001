@@ -295,6 +295,42 @@ class TestAnalysisOrchestrator:
         mock_notifications.create_notification.assert_called()
 
     @pytest.mark.asyncio
+    async def test_process_job_marks_pipeline_success(
+        self,
+        orchestrator,
+        mock_job_repo,
+        mock_result_repo,
+        mock_gemini,
+        mock_scraper,
+        mock_pixelrag,
+        mock_notifications,
+        sample_image_job,
+        sample_proposal,
+    ):
+        """process_job DEBE registrar éxito en pipeline_state al completar (R-X03)."""
+        import app.services.analysis.pipeline_state as ps_module
+        ps_module.pipeline_state.active = False
+        ps_module.pipeline_state.last_successful_run = None
+
+        mock_job_repo.get_by_id.return_value = sample_image_job
+        mock_gemini.analyze_image.return_value = sample_proposal
+
+        from app.models.analysis import AnalysisResult
+        mock_result = MagicMock(spec=AnalysisResult)
+        mock_result.id = uuid4()
+        mock_result_repo.create.return_value = mock_result
+
+        result = await orchestrator.process_job(str(sample_image_job.id))
+
+        assert result is not None
+        assert ps_module.pipeline_state.last_successful_run is not None
+        assert ps_module.pipeline_state.is_registered() is True
+
+        # Limpiar estado del singleton para no contaminar otros tests
+        ps_module.pipeline_state.active = False
+        ps_module.pipeline_state.last_successful_run = None
+
+    @pytest.mark.asyncio
     async def test_pixelrag_failure_falls_back_to_text_only(
         self,
         orchestrator,

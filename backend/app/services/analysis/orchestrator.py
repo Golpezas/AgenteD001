@@ -18,6 +18,7 @@ from app.repositories.analysis import (
 )
 from app.schemas.analysis import AnalysisProposal, ScreenshotResult
 from app.services.analysis.gemini_client import GeminiClient
+from app.services.analysis.pipeline_state import pipeline_state
 from app.services.analysis.scraper import ScrapedContent, WebScraper
 from app.services.notification import NotificationService
 from app.services.pixelrag import PixelRAGService
@@ -130,6 +131,9 @@ class AnalysisOrchestrator:
                 resource_type="analysis_result",
                 resource_id=str(result.id),
             )
+
+            # Registrar éxito del pipeline (R-X03)
+            pipeline_state.mark_success()
 
             return result
 
