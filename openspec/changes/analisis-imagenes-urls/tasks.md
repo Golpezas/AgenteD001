@@ -32,10 +32,10 @@ Chain strategy: feature-branch-chain
 
 ## Phase 2: Core
 
-- [ ] 2.1 Create `backend/app/services/analysis/gemini_client.py` — Gemini Vision call with Pillow-optimized image
-- [ ] 2.2 Create `backend/app/services/analysis/scraper.py` — HTML scrape via httpx/BS4 + screenshot via PixelRAG
-- [ ] 2.3 Create `backend/app/services/analysis/orchestrator.py` — async pipeline: image/URL → extraction → Pydantic validation → proposal
-- [ ] 2.4 Modify `backend/app/services/pixelrag.py` — add `capture_for_analysis(url) -> ScreenshotResult` (spec R-X04)
+- [x] 2.1 Create `backend/app/services/analysis/gemini_client.py` — Gemini Vision call with Pillow-optimized image
+- [x] 2.2 Create `backend/app/services/analysis/scraper.py` — HTML scrape via httpx/BS4 + screenshot via PixelRAG
+- [x] 2.3 Create `backend/app/services/analysis/orchestrator.py` — async pipeline: image/URL → extraction → Pydantic validation → proposal
+- [x] 2.4 Modify `backend/app/services/pixelrag.py` — add `capture_for_analysis(url) -> ScreenshotResult` (spec R-X04)
 
 ## Phase 3: Integration
 
