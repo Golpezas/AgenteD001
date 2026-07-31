@@ -7,7 +7,7 @@ AnalysisResult y ScrapedSource con filtros especializados.
 
 from typing import Any, Dict, Optional
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.analysis import AnalysisJob, AnalysisResult, ScrapedSource
@@ -19,6 +19,19 @@ class AnalysisJobRepository(BaseRepository[AnalysisJob]):
 
     def __init__(self, session: AsyncSession):
         super().__init__(AnalysisJob, session)
+
+    async def count_by_status(self, status: str) -> int:
+        """Cuenta jobs activos en un estado dado (R-X03)."""
+        stmt = (
+            select(func.count())
+            .select_from(AnalysisJob)
+            .where(
+                AnalysisJob.status == status,
+                AnalysisJob.is_active.is_(True),
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar() or 0
 
 
 class AnalysisResultRepository(BaseRepository[AnalysisResult]):
