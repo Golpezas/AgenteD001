@@ -71,7 +71,7 @@ class AnalysisOrchestrator:
         Returns:
             AnalysisResult creado con status="proposal", o None si error
         """
-        job = await self.job_repo.get(job_id)
+        job = await self.job_repo.get_by_id(job_id)
         if not job:
             logger.warning(f"Job {job_id} not found")
             return None
@@ -234,7 +234,7 @@ class AnalysisOrchestrator:
         Returns:
             True si se aprobó, False si no existe o no es proposal
         """
-        result = await self.result_repo.get(result_id)
+        result = await self.result_repo.get_by_id(result_id)
         if not result or result.status != "proposal":
             return False
 
@@ -269,7 +269,7 @@ class AnalysisOrchestrator:
         Returns:
             True si se rechazó, False si no existe o no es proposal
         """
-        result = await self.result_repo.get(result_id)
+        result = await self.result_repo.get_by_id(result_id)
         if not result or result.status != "proposal":
             return False
 
@@ -289,7 +289,7 @@ class AnalysisOrchestrator:
 
     async def get_job_status(self, job_id: str) -> Optional[dict]:
         """Obtiene estado actual de un job."""
-        job = await self.job_repo.get(job_id)
+        job = await self.job_repo.get_by_id(job_id)
         if not job:
             return None
 

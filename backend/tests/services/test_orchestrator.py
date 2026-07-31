@@ -135,7 +135,7 @@ class TestAnalysisOrchestrator:
         sample_scraped,
         sample_screenshot,
     ):
-        mock_job_repo.get.return_value = sample_job
+        mock_job_repo.get_by_id.return_value = sample_job
         mock_scraper.scrape.return_value = sample_scraped
         mock_pixelrag.capture_for_analysis.return_value = sample_screenshot
         mock_gemini.analyze_scraped_content.return_value = sample_proposal
@@ -149,7 +149,7 @@ class TestAnalysisOrchestrator:
         result = await orchestrator.process_job(str(sample_job.id))
 
         assert result is not None
-        mock_job_repo.get.assert_called_once()
+        mock_job_repo.get_by_id.assert_called_once()
         mock_scraper.scrape.assert_called_once_with(sample_job.input_data["url"])
         mock_pixelrag.capture_for_analysis.assert_called_once_with(sample_job.input_data["url"])
         # Con screenshot disponible, el orchestrator usa analyze_scraped_content (no analyze_image)
@@ -170,7 +170,7 @@ class TestAnalysisOrchestrator:
         sample_image_job,
         sample_proposal,
     ):
-        mock_job_repo.get.return_value = sample_image_job
+        mock_job_repo.get_by_id.return_value = sample_image_job
         mock_gemini.analyze_image.return_value = sample_proposal
 
         from app.models.analysis import AnalysisResult
@@ -191,7 +191,7 @@ class TestAnalysisOrchestrator:
         orchestrator,
         mock_job_repo,
     ):
-        mock_job_repo.get.return_value = None
+        mock_job_repo.get_by_id.return_value = None
 
         result = await orchestrator.process_job(str(uuid4()))
 
@@ -208,7 +208,7 @@ class TestAnalysisOrchestrator:
         sample_job,
         sample_scraped,
     ):
-        mock_job_repo.get.return_value = sample_job
+        mock_job_repo.get_by_id.return_value = sample_job
         mock_scraper.scrape.return_value = sample_scraped
         mock_pixelrag.capture_for_analysis.side_effect = Exception("screenshot fail")
         mock_gemini.analyze_image.side_effect = Exception("Gemini API down")
@@ -247,7 +247,7 @@ class TestAnalysisOrchestrator:
         mock_result.product_name = "Test Product"
         mock_result.extracted_price = 299.99
         mock_result.currency = "USD"
-        mock_result_repo.get.return_value = mock_result
+        mock_result_repo.get_by_id.return_value = mock_result
 
         success = await orchestrator.approve_proposal(str(result_id))
 
@@ -267,7 +267,7 @@ class TestAnalysisOrchestrator:
         mock_result = MagicMock(spec=AnalysisResult)
         mock_result.id = result_id
         mock_result.status = "approved"  # Ya aprobado
-        mock_result_repo.get.return_value = mock_result
+        mock_result_repo.get_by_id.return_value = mock_result
 
         success = await orchestrator.approve_proposal(str(result_id))
 
@@ -286,7 +286,7 @@ class TestAnalysisOrchestrator:
         mock_result = MagicMock(spec=AnalysisResult)
         mock_result.id = result_id
         mock_result.status = "proposal"
-        mock_result_repo.get.return_value = mock_result
+        mock_result_repo.get_by_id.return_value = mock_result
 
         success = await orchestrator.reject_proposal(str(result_id), "Low confidence")
 
@@ -310,7 +310,7 @@ class TestAnalysisOrchestrator:
         """Si el screenshot falla, el pipeline continúa con análisis solo texto."""
         mock_pixelrag.capture_for_analysis.side_effect = Exception("render failed")  # Falla
 
-        mock_job_repo.get.return_value = sample_job
+        mock_job_repo.get_by_id.return_value = sample_job
         mock_scraper.scrape.return_value = sample_scraped
         mock_gemini.analyze_image.return_value = sample_proposal
 
