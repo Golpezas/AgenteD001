@@ -186,3 +186,10 @@ class ScrapedSourceList(BaseModel):
 
     model_config = {"from_attributes": True}
 
+
+class RejectAnalysisRequest(BaseModel):
+    """Motivo opcional para rechazar una propuesta."""
+
+    reason: Optional[str] = Field(None, max_length=500)
+
+
