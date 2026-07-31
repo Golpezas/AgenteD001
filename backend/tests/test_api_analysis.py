@@ -16,6 +16,7 @@ from httpx import ASGITransport, AsyncClient
 
 from app.api.analysis import router as analysis_router
 from app.core.database import get_db
+from app.services.analysis import url_guard
 
 
 @pytest.fixture
@@ -24,6 +25,19 @@ def override_get_db(db_session):
         yield db_session
 
     return _get_db_override
+
+
+@pytest.fixture(autouse=True)
+def _no_real_dns(monkeypatch):
+    """Keep API tests network-free: fake resolver always returns a public IP.
+
+    Literal private IPs (loopback/link-local/metadata) are rejected by the
+    guard before any resolution happens, so this patch only affects
+    hostname-based URLs used by the CRUD tests (201/409/200/204/404).
+    """
+
+    monkeypatch.setattr(url_guard, "_resolve_host", lambda host: ["93.184.216.34"])
+    yield
 
 
 @pytest.fixture
@@ -82,6 +96,37 @@ class TestScrapedSourcesAPI:
     async def test_create_source_422_invalid_url(self, client):
         response = await client.post("/api/v1/analysis/sources", json={"url": ""})
         assert response.status_code == 422
+
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "http://127.0.0.1/admin",
+            "http://127.0.0.1:8080/",
+            "http://169.254.169.254/latest/meta-data/",
+            "http://[::1]/",
+            "http://10.0.0.5/internal",
+            "http://192.168.1.10/",
+        ],
+    )
+    @pytest.mark.asyncio
+    async def test_create_source_400_private_loopback_url(self, client, url):
+        """SSRF guard (D7): private/loopback/link-local/metadata URLs are rejected."""
+        response = await client.post("/api/v1/analysis/sources", json={"url": url})
+        assert response.status_code == 400
+
+    @pytest.mark.parametrize("url", ["ftp://example.com/file", "file:///etc/passwd"])
+    @pytest.mark.asyncio
+    async def test_create_source_400_non_http_scheme(self, client, url):
+        """SSRF guard (D7): only http/https schemes are accepted."""
+        response = await client.post("/api/v1/analysis/sources", json={"url": url})
+        assert response.status_code == 400
+
+    @pytest.mark.parametrize("url", ["http://example.com/", "https://example.com/products"])
+    @pytest.mark.asyncio
+    async def test_create_source_201_public_url(self, client, url):
+        """SSRF guard (D7): valid public http/https URLs still create the source."""
+        response = await client.post("/api/v1/analysis/sources", json={"url": url})
+        assert response.status_code == 201
 
     @pytest.mark.asyncio
     async def test_list_sources_paginated(self, client):

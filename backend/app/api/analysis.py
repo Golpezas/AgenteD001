@@ -17,6 +17,7 @@ from app.schemas.analysis import (
     ScrapedSourceList,
     ScrapedSourceResponse,
 )
+from app.services.analysis.url_guard import validate_external_url
 
 router = APIRouter(prefix="/api/v1/analysis", tags=["analysis"])
 
@@ -30,7 +31,19 @@ async def create_source(
     payload: ScrapedSourceCreate,
     db: AsyncSession = Depends(get_db),
 ):
-    """Registra una fuente scrapeada (409 si la url ya existe)."""
+    """Registers a scraped source (409 if the url already exists).
+
+    The URL is validated by the SSRF guard (D7) BEFORE any lookup or insert;
+    private/loopback/link-local/metadata targets and non-http schemes get 400.
+    """
+    try:
+        validate_external_url(payload.url)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
+
     repo = ScrapedSourceRepository(db)
 
     existing = await repo.get_by_url(payload.url)
