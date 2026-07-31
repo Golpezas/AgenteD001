@@ -20,6 +20,9 @@ from app.schemas.analysis import (
     AnalysisResultResponse,
     AnalysisResultUpdate,
     AnalysisProposal,
+    ScrapedSourceCreate,
+    ScrapedSourceList,
+    ScrapedSourceResponse,
     ScreenshotResult,
 )
 
@@ -225,3 +228,69 @@ class TestAnalysisResultSchema:
             updated_at=datetime(2026, 1, 15, 10, 0, 0),
         )
         assert response.status == "accepted"
+
+
+class TestScrapedSourceSchema:
+    """Schemas de ScrapedSource: url str 1..2048 (no HttpUrl, sin normalización)."""
+
+    def test_create_valid_full(self):
+        create = ScrapedSourceCreate(
+            url="https://competidor.com/products",
+            name="Competidor Principal",
+            schedule_interval_minutes=60,
+        )
+        assert create.url == "https://competidor.com/products"
+        assert create.name == "Competidor Principal"
+        assert create.schedule_interval_minutes == 60
+
+    def test_create_valid_optional_fields_none(self):
+        create = ScrapedSourceCreate(url="https://example.com")
+        assert create.url == "https://example.com"
+        assert create.name is None
+        assert create.schedule_interval_minutes is None
+
+    def test_create_url_empty_rejected(self):
+        with pytest.raises(ValidationError):
+            ScrapedSourceCreate(url="")
+
+    def test_create_url_exceeds_max_length_rejected(self):
+        with pytest.raises(ValidationError):
+            ScrapedSourceCreate(url="x" * 2049)
+
+    def test_create_url_keeps_exact_value_no_normalization(self):
+        """url es str validado por rango, NO HttpUrl: no se normaliza ni se punycodea."""
+        create = ScrapedSourceCreate(url="HTTPS://Ejemplo.Com/")
+        assert create.url == "HTTPS://Ejemplo.Com/"
+
+    def test_response_includes_metadata(self):
+        response = ScrapedSourceResponse(
+            id=uuid.uuid4(),
+            url="https://example.com",
+            name="Example",
+            schedule_interval_minutes=30,
+            last_analyzed_at=None,
+            is_active=True,
+            created_at=datetime(2026, 1, 15, 10, 0, 0),
+            updated_at=datetime(2026, 1, 15, 10, 0, 0),
+        )
+        assert response.id is not None
+        assert response.url == "https://example.com"
+        assert response.is_active is True
+        assert response.last_analyzed_at is None
+
+    def test_list_shape(self):
+        item = ScrapedSourceResponse(
+            id=uuid.uuid4(),
+            url="https://example.com",
+            name=None,
+            schedule_interval_minutes=None,
+            last_analyzed_at=None,
+            is_active=True,
+            created_at=datetime(2026, 1, 15, 10, 0, 0),
+            updated_at=datetime(2026, 1, 15, 10, 0, 0),
+        )
+        listing = ScrapedSourceList(items=[item], total=1, page=1, per_page=10)
+        assert listing.total == 1
+        assert listing.page == 1
+        assert listing.per_page == 10
+        assert listing.items[0].url == "https://example.com"
