@@ -48,6 +48,10 @@ from app.services.pixelrag import PixelRAGService
 
 router = APIRouter(prefix="/api/v1/analysis", tags=["analysis"])
 
+# D4/D7 limits enforced at the API boundary, before any job is created.
+MAX_IMAGE_BYTES_BASE64 = 8 * 1024 * 1024  # base64 payload cap (~6 MiB decoded)
+MAX_URL_CHARS = 2048
+
 
 def build_orchestrator(session: AsyncSession) -> AnalysisOrchestrator:
     """Factory de AnalysisOrchestrator con servicios reales (punto de mockeo)."""
@@ -148,7 +152,13 @@ async def create_job(
     background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
 ):
-    """Crea un job de análisis y lo agenda en background (202)."""
+    """Creates an analysis job and schedules background processing (202).
+
+    Enforces the D4/D7 limits before any job is created: image jobs require a
+    base64 ``image_bytes`` string of at most 8 MiB (413 when exceeded), url
+    jobs require a ``url`` string of at most 2048 chars validated by the SSRF
+    guard (400 for private/loopback targets or non-http schemes).
+    """
     job_type = payload.job_type
     input_data = payload.input_data or {}
 
@@ -157,16 +167,46 @@ async def create_job(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Invalid job_type '{job_type}'. Must be 'image' or 'url'",
         )
-    if job_type == "image" and not input_data.get("image_bytes"):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="job_type 'image' requires 'image_bytes' in input_data",
-        )
-    if job_type == "url" and not input_data.get("url"):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="job_type 'url' requires 'url' in input_data",
-        )
+
+    if job_type == "image":
+        image_bytes = input_data.get("image_bytes")
+        if not image_bytes:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="job_type 'image' requires 'image_bytes' in input_data",
+            )
+        if not isinstance(image_bytes, str):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="input_data.image_bytes must be a base64 string",
+            )
+        if len(image_bytes) > MAX_IMAGE_BYTES_BASE64:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                detail=(
+                    "input_data.image_bytes exceeds the "
+                    f"{MAX_IMAGE_BYTES_BASE64} characters limit"
+                ),
+            )
+    elif job_type == "url":
+        url = input_data.get("url")
+        if not url:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="job_type 'url' requires 'url' in input_data",
+            )
+        if not isinstance(url, str) or len(url) > MAX_URL_CHARS:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"input_data.url must be a string of at most {MAX_URL_CHARS} chars",
+            )
+        try:
+            await validate_external_url(url)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=str(exc),
+            ) from exc
 
     repo = AnalysisJobRepository(db)
     job = await repo.create(

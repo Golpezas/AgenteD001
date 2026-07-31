@@ -16,6 +16,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from httpx import ASGITransport, AsyncClient
 
+from app.api.analysis import MAX_IMAGE_BYTES_BASE64, MAX_URL_CHARS
 from app.core.database import get_db
 from app.services.analysis import url_guard
 from app.main import create_app
@@ -343,6 +344,78 @@ class TestAnalysisJobsAPI:
             "/api/v1/analysis/jobs", json={"input_data": {}}
         )
         assert response.status_code == 422
+
+    # ── D7/R1-001: url jobs must pass the SSRF guard; D4: size limits ──────
+
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "http://127.0.0.1/admin",
+            "http://169.254.169.254/latest/meta-data/",
+            "http://[::1]/",
+            "http://10.0.0.1/internal",
+            "http://192.168.1.1/",
+        ],
+    )
+    @pytest.mark.asyncio
+    async def test_create_url_job_400_private_loopback_url(
+        self, client, fake_session_factory, mock_build_orchestrator, url
+    ):
+        """SSRF guard (D7): private/loopback/link-local URLs are rejected (400)."""
+        payload = {"job_type": "url", "input_data": {"url": url}}
+        response = await client.post("/api/v1/analysis/jobs", json=payload)
+        assert response.status_code == 400
+        mock_build_orchestrator.process_job.assert_not_awaited()
+
+    @pytest.mark.parametrize("url", ["ftp://example.com/file", "file:///etc/passwd"])
+    @pytest.mark.asyncio
+    async def test_create_url_job_400_non_http_scheme(
+        self, client, fake_session_factory, mock_build_orchestrator, url
+    ):
+        """SSRF guard (D7): only http/https schemes are accepted (400)."""
+        payload = {"job_type": "url", "input_data": {"url": url}}
+        response = await client.post("/api/v1/analysis/jobs", json=payload)
+        assert response.status_code == 400
+        mock_build_orchestrator.process_job.assert_not_awaited()
+
+    @pytest.mark.parametrize(
+        "url", ["http://example.com/", "https://example.com/products"]
+    )
+    @pytest.mark.asyncio
+    async def test_create_url_job_202_public_url(
+        self, client, fake_session_factory, mock_build_orchestrator, url
+    ):
+        """SSRF guard (D7): public http/https URLs still schedule the job (202)."""
+        payload = {"job_type": "url", "input_data": {"url": url}}
+        response = await client.post("/api/v1/analysis/jobs", json=payload)
+        assert response.status_code == 202
+        assert response.json()["job_type"] == "url"
+
+    @pytest.mark.asyncio
+    async def test_create_url_job_400_url_too_long(
+        self, client, fake_session_factory, mock_build_orchestrator
+    ):
+        """D4: input_data.url longer than 2048 chars is rejected (400)."""
+        payload = {
+            "job_type": "url",
+            "input_data": {"url": "https://example.com/" + "a" * MAX_URL_CHARS},
+        }
+        response = await client.post("/api/v1/analysis/jobs", json=payload)
+        assert response.status_code == 400
+        mock_build_orchestrator.process_job.assert_not_awaited()
+
+    @pytest.mark.asyncio
+    async def test_create_image_job_413_image_bytes_too_large(
+        self, client, fake_session_factory, mock_build_orchestrator
+    ):
+        """D4: image_bytes base64 payload over 8 MiB is rejected (413)."""
+        payload = {
+            "job_type": "image",
+            "input_data": {"image_bytes": "A" * (MAX_IMAGE_BYTES_BASE64 + 1)},
+        }
+        response = await client.post("/api/v1/analysis/jobs", json=payload)
+        assert response.status_code == 413
+        mock_build_orchestrator.process_job.assert_not_awaited()
 
     @pytest.mark.asyncio
     async def test_get_jobs_paginated(
