@@ -7,8 +7,14 @@ dependencias de Chromium.
 """
 
 import importlib
+import io
+from datetime import datetime
 from typing import Optional
 from urllib.parse import urlparse
+
+from PIL import Image
+
+from app.schemas.analysis import ScreenshotResult
 
 
 class PixelRAGService:
@@ -70,6 +76,45 @@ class PixelRAGService:
             return result
         except Exception as e:
             raise RuntimeError(f"Render failed: {e}") from e
+
+    async def capture_for_analysis(self, url: str) -> ScreenshotResult:
+        """
+        Captura un screenshot de la URL para el pipeline de análisis.
+
+        Reutiliza la misma instancia de pixelshot que render_url.
+
+        Args:
+            url: URL a capturar.
+
+        Returns:
+            ScreenshotResult con los bytes PNG del renderizado, la URL,
+            el timestamp de captura y la resolución de la imagen.
+
+        Raises:
+            ValueError: Si la URL es inválida o vacía.
+            RuntimeError: Si PixelRAG no está disponible o el render falla.
+        """
+        self._validate_url(url)
+        await self._lazy_init()
+
+        if self._engine is None:
+            raise RuntimeError("PixelRAG is not available")
+
+        # Los errores del engine se propagan envueltos en RuntimeError (igual que render_url)
+        try:
+            png_bytes = await self._engine.render_url(url)
+        except Exception as e:
+            raise RuntimeError(f"Render failed: {e}") from e
+
+        # Derivar resolución abriendo la imagen PNG con PIL
+        img = Image.open(io.BytesIO(png_bytes))
+
+        return ScreenshotResult(
+            image_bytes=png_bytes,
+            url=url,
+            timestamp=datetime.now(),
+            resolution=img.size,
+        )
 
     async def health(self) -> dict:
         """Retorna el estado del servicio."""

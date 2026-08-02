@@ -16,6 +16,11 @@ from app.core.config import settings
 from app.models.base import Base
 
 # Importar todos los modelos para que autogenerate los detecte
+from app.models.analysis import (  # noqa: F401
+    AnalysisJob,
+    AnalysisResult,
+    ScrapedSource,
+)
 from app.models.business_policy import BusinessPolicy  # noqa: F401
 from app.models.calculation_factor import CalculationFactor  # noqa: F401
 from app.models.company import Company  # noqa: F401

@@ -144,3 +144,52 @@ class AnalysisResultList(BaseModel):
     per_page: int
 
     model_config = {"from_attributes": True}
+
+
+# ── Esquemas ScrapedSource ─────────────────────────────
+
+
+class ScrapedSourceCreate(BaseModel):
+    """Schema para crear una fuente scrapeada.
+
+    url es `str` validado por rango (1..2048), NO HttpUrl:
+    se persiste el valor exacto sin normalización (decisión D1).
+    """
+
+    url: str = Field(..., min_length=1, max_length=2048)
+    name: Optional[str] = Field(None, min_length=1, max_length=255)
+    schedule_interval_minutes: Optional[int] = Field(None, ge=1)
+
+
+class ScrapedSourceResponse(BaseModel):
+    """Schema de respuesta para ScrapedSource."""
+
+    id: UUID
+    url: str
+    name: Optional[str] = None
+    schedule_interval_minutes: Optional[int] = None
+    last_analyzed_at: Optional[datetime] = None
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ScrapedSourceList(BaseModel):
+    """Lista paginada de fuentes scrapeadas."""
+
+    items: list[ScrapedSourceResponse]
+    total: int
+    page: int
+    per_page: int
+
+    model_config = {"from_attributes": True}
+
+
+class RejectAnalysisRequest(BaseModel):
+    """Motivo opcional para rechazar una propuesta."""
+
+    reason: Optional[str] = Field(None, max_length=500)
+
+

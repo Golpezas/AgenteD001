@@ -7,6 +7,7 @@ import {
   AppstoreOutlined,
   DollarOutlined,
   FileProtectOutlined,
+  SearchOutlined,
 } from '@ant-design/icons';
 import NotificationBadge from '@/components/notifications/NotificationBadge';
 import styles from './AppLayout.module.css';
@@ -38,6 +39,11 @@ const menuItems = [
     key: '/business-rules',
     icon: <FileProtectOutlined />,
     label: 'Reglas de Negocio',
+  },
+  {
+    key: '/analysis',
+    icon: <SearchOutlined />,
+    label: 'Análisis',
   },
 ];
 
