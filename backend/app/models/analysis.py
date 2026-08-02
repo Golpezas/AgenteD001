@@ -8,6 +8,7 @@ y ScrapedSource (fuente URL para monitoreo periódico).
 
 import uuid
 from datetime import datetime
+from enum import Enum
 
 from sqlalchemy import (
     Boolean,
@@ -23,6 +24,15 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import Uuid
 
 from app.models.base import Base, SoftDeleteMixin, TimestampMixin, gen_uuid
+
+
+class AnalysisStatus(str, Enum):
+    """Estados del ciclo de vida de un AnalysisJob."""
+
+    PENDING = "pending"
+    PROCESSING = "processing"
+    COMPLETED = "completed"
+    FAILED = "failed"
 
 
 class AnalysisJob(Base, TimestampMixin, SoftDeleteMixin):
@@ -50,6 +60,16 @@ class AnalysisJob(Base, TimestampMixin, SoftDeleteMixin):
         default="pending",
         nullable=False,
         comment="pending | processing | completed | failed",
+    )
+    started_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        comment="Inicio de procesamiento del job",
+    )
+    completed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        comment="Fin de procesamiento del job (éxito o error)",
     )
     result_id: Mapped[uuid.UUID | None] = mapped_column(
         Uuid,

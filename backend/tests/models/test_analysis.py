@@ -13,7 +13,23 @@ import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.models.analysis import AnalysisJob, AnalysisResult, ScrapedSource
+from app.models.analysis import AnalysisJob, AnalysisResult, AnalysisStatus, ScrapedSource
+
+
+class TestAnalysisStatus:
+    """Suite de tests para el enum AnalysisStatus."""
+
+    def test_enum_values(self):
+        """Los valores del enum deben coincidir con el ciclo de vida del job."""
+        assert AnalysisStatus.PENDING.value == "pending"
+        assert AnalysisStatus.PROCESSING.value == "processing"
+        assert AnalysisStatus.COMPLETED.value == "completed"
+        assert AnalysisStatus.FAILED.value == "failed"
+
+    def test_enum_is_str_enum(self):
+        """AnalysisStatus debe heredar de str para serializar como string."""
+        assert issubclass(AnalysisStatus, str)
+        assert str(AnalysisStatus.COMPLETED.value) == "completed"
 
 
 class TestAnalysisJobModel:
