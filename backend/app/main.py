@@ -63,6 +63,7 @@ def create_app() -> FastAPI:
     from app.api.price_list_items import router as price_list_items_router
     from app.api.seed import router as seed_router
     from app.api.notifications import router as notifications_router
+    from app.api.analysis import router as analysis_router
 
     app.include_router(health_router, prefix="/api/v1")
     app.include_router(clients_router)
@@ -73,6 +74,7 @@ def create_app() -> FastAPI:
     app.include_router(price_list_items_router)
     app.include_router(seed_router)
     app.include_router(notifications_router)
+    app.include_router(analysis_router)
 
     return app
 
