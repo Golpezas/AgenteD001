@@ -141,6 +141,35 @@ class TestAnalysisJobRepository:
         assert deleted is not None
         assert deleted.is_active is False
 
+    @pytest.mark.asyncio
+    async def test_count_by_status(self, db_session: AsyncSession):
+        """Debe contar jobs activos por estado."""
+        repo = AnalysisJobRepository(db_session)
+        await repo.create(
+            {"job_type": "image", "input_data": {}, "status": "pending"}
+        )
+        await repo.create(
+            {"job_type": "url", "input_data": {}, "status": "processing"}
+        )
+        await repo.create(
+            {"job_type": "image", "input_data": {}, "status": "pending"}
+        )
+
+        count = await repo.count_by_status("pending")
+        assert count == 2
+
+    @pytest.mark.asyncio
+    async def test_count_by_status_excludes_inactive(self, db_session: AsyncSession):
+        """Debe excluir jobs soft-deleted del conteo."""
+        repo = AnalysisJobRepository(db_session)
+        job = await repo.create(
+            {"job_type": "image", "input_data": {}, "status": "pending"}
+        )
+        await repo.soft_delete(job.id)
+
+        count = await repo.count_by_status("pending")
+        assert count == 0
+
 
 class TestAnalysisResultRepository:
     """Suite de tests para AnalysisResultRepository."""
