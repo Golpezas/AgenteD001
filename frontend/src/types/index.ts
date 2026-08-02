@@ -194,3 +194,90 @@ export interface UnreadCountResponse {
 
 /** Alias para lista paginada de notificaciones */
 export type NotificationList = PaginatedResponse<Notification>;
+
+/* ──────────────────────────────────────────────
+   Analysis — Análisis de imágenes y URLs
+   ────────────────────────────────────────────── */
+
+/** Tipo de job de análisis */
+export type AnalysisJobType = 'image' | 'url';
+
+/** Estado de un job de análisis */
+export type AnalysisJobStatus = 'pending' | 'processing' | 'completed' | 'failed';
+
+/** Estado de un resultado de análisis */
+export type AnalysisResultStatus = 'proposal' | 'accepted' | 'rejected';
+
+/** Datos de entrada para crear un job */
+export interface AnalysisJobInputData {
+  image_bytes?: string;  // base64 para job_type 'image'
+  url?: string;          // URL para job_type 'url'
+}
+
+/** Payload para crear un job de análisis */
+export interface AnalysisJobCreate {
+  job_type: AnalysisJobType;
+  input_data: AnalysisJobInputData;
+}
+
+/** Job de análisis (respuesta) */
+export interface AnalysisJob {
+  id: string;
+  job_type: AnalysisJobType;
+  input_data: AnalysisJobInputData;
+  status: AnalysisJobStatus;
+  result_id: string | null;
+  error_message: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Lista paginada de jobs */
+export interface AnalysisJobList extends PaginatedResponse<AnalysisJob> {}
+
+/** Resultado de análisis (respuesta) */
+export interface AnalysisResult {
+  id: string;
+  job_id: string;
+  status: AnalysisResultStatus;
+  product_name: string | null;
+  extracted_price: number | null;
+  currency: string | null;
+  confidence_score: number | null;
+  raw_data: Record<string, unknown> | null;
+  proposal_data: Record<string, unknown> | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Lista paginada de resultados */
+export interface AnalysisResultList extends PaginatedResponse<AnalysisResult> {}
+
+/** Payload para aprobar/rechazar resultado */
+export interface AnalysisResultAction {
+  reason?: string;
+}
+
+/** Fuente scrapeada (crear) */
+export interface ScrapedSourceCreate {
+  url: string;
+  name?: string;
+  schedule_interval_minutes?: number;
+}
+
+/** Fuente scrapeada (respuesta) */
+export interface ScrapedSource {
+  id: string;
+  url: string;
+  name: string | null;
+  schedule_interval_minutes: number | null;
+  last_analyzed_at: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Lista paginada de fuentes scrapeadas */
+export interface ScrapedSourceList extends PaginatedResponse<ScrapedSource> {}

@@ -6,6 +6,7 @@ import Products from '@/pages/Products';
 import PriceLists from '@/pages/PriceLists';
 import BusinessRules from '@/pages/BusinessRules';
 import NotificationsPage from '@/pages/Notifications';
+import Analysis from '@/pages/Analysis';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/price-lists" element={<PriceLists />} />
           <Route path="/business-rules" element={<BusinessRules />} />
           <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/analysis" element={<Analysis />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
